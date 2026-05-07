@@ -90,7 +90,6 @@ int inserisci_Hash(hashtable h, item elem) {
     struct nodo *attuale;
 
     ind = hashFun(get_id(elem), h->dimensione);
-
     attuale = h->tabella[ind];
 
     //Controlla se esiste già un elemento con la stessa chiave
@@ -108,4 +107,23 @@ int inserisci_Hash(hashtable h, item elem) {
     h->tabella[ind] = nuovo;
 
     return 1;                           //Inserimento riuscito, ritorna 1
+}
+
+//Ricerca Item
+item ricerca(hashtable h, char* chiave){
+
+    if(h == NULL)
+        return NULLITEM;                //Hashmap non è corretta, ritorna NULLITEM
+
+    int ind = hashFun(chiave, h->dimensione);
+    struct nodo *attuale = h->tabella[ind];
+
+    while(attuale){
+        if (strcmp(get_id(attuale->segn), chiave) == 0) {
+            return attuale->segn;                
+        }
+        attuale = attuale->prossimo;
+    }
+
+    return NULLITEM;
 }
