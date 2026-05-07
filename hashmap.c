@@ -55,7 +55,7 @@ hashtable crea_Hashtable(int dimensione) {
 
     h->dimensione = dimensione;
 
-    //Allocazione della memoria: inizializzo tutti i puntatori a NULL tramite calloc
+    //Allocazione della memoria: inizializza tutti i puntatori a NULL tramite calloc
     h->tabella = (struct nodo **) calloc(dimensione, sizeof(struct nodo *));
     if (h->tabella == NULL) {
         free(h);            
@@ -67,7 +67,7 @@ hashtable crea_Hashtable(int dimensione) {
 
 void libera_Hashtable(hashtable h) {
 
-    //elimina la lista collegata in ogni indice della tabella
+    //Elimina la lista collegata in ogni indice della tabella
     for(int i = 0; i < h->dimensione; i++) {
         libera_lista(h->tabella[i]);
     }
@@ -126,4 +126,46 @@ item ricerca(hashtable h, char* chiave){
     }
 
     return NULLITEM;
+}
+
+/****Stampa****/
+
+int stampa_Hashtable(hashtable h){
+
+	if(h == NULL)
+        return;                			//Hashmap non è corretta, ritorna 0
+
+	//Cicla tutta la tabella hash e stampa le segnalazioni contenute in tutti i nodi delle liste
+	for(int ind = 0; ind < h->dimensione; ind++){
+
+		struct nodo *attuale = h->tabella[ind];
+
+		while(attuale){
+			stampa_segnalazione(attuale->segn);
+
+			attuale = attuale->prossimo;
+    	}
+	}
+
+	return 1;							//Stampa riuscita, ritorna 1
+}
+
+int stampa_Hashtable_file(hashtable h, FILE* f){
+
+	if(h == NULL)
+        return;                			//Hashmap non è corretta, ritorna 0
+	
+	//Cicla tutta la tabella hash e stampa le segnalazioni contenute in tutti i nodi delle liste
+	for(int ind = 0; ind < h->dimensione; ind++){
+
+		struct nodo *attuale = h->tabella[ind];
+
+		while(attuale){
+			stampa_segnalazione_file(attuale->segn, f);
+
+			attuale = attuale->prossimo;
+    	}
+	}
+
+	return 1;							//Stampa riuscita, ritorna 1
 }

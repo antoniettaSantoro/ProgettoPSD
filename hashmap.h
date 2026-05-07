@@ -20,3 +20,15 @@ int inserisci_Hash(hashtable h, item elem);
 //Se la chiave non è presente nella hashmap restituisce NULLITEM
 //Se la hashmap non è corretta restituisce NULLITEM
 item ricerca(hashtable h, char* chiave);
+
+/****Stampa****/
+
+//Stampa a video l'intera hashmap
+//Se la hashmap in input non è corretta restituisce 0
+//Se la stampa va a buon fine restituisce 1
+int stampa_Hashtable(hashtable h);
+
+//Stampa su file l'intera hashmap
+//Se la hashmap in input non è corretta restituisce 0
+//Se la stampa va a buon fine restituisce 1
+int stampa_Hashtable_file(hashtable h, FILE* f);

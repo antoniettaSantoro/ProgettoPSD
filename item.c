@@ -83,3 +83,13 @@ stato get_stato(item s){
 void aggiorna_stato(item s, stato st){
     s->st = st;
 }
+
+/****Stampa****/
+
+void stampa_segnalazione(item s){
+    printf("%s\t%s\t%d\t%s\t%d\t%d\t%s\n", s->id, s->nome, s->cat, s->data, s->urgenza, s->st, s->descrizione);
+}
+
+void stampa_segnalazione_file(item s, FILE* f){
+    fprintf(f, "%s\t%s\t%d\t%s\t%d\t%d\t%s\n", s->id, s->nome, s->cat, s->data, s->urgenza, s->st, s->descrizione);
+}

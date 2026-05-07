@@ -43,3 +43,11 @@ stato get_stato(item s);
 
 //Modifica il valore dello stato nella segnalazione data in input
 void aggiorna_stato(item s, stato st);
+
+/****Stampa****/
+
+//Stampa a video una segnalazione
+void stampa_segnalazione(item s);
+
+//Stampa su file una segnalazione
+void stampa_segnalazione_file(item s, FILE* f);
