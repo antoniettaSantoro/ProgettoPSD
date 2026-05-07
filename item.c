@@ -3,27 +3,33 @@
 #include <string.h>
 #include "item.h"
 
+/****Definizioni Strutture****/
+
+//Definizione della struttura segnalazione
 struct segnalazione {
-    int id;
+    char id[10];                     //chiave
     char nome[51];
     categoria cat;
     char descrizione[101];
-    char data[10];             
+    char data[10];
     int urgenza;
     stato st;
 };
 
 /****Gestione della Memoria****/
 
-item crea_segnalazione(int id, char* nome, categoria cat, char* descrizione, char* data, int urgenza, stato st){
+item crea_segnalazione(char* id, char* nome, categoria cat, char* descrizione, char* data, int urgenza, stato st){
     item s = (item) malloc(sizeof(struct segnalazione));
     if(s == NULL)
         return NULL;    //ritorna NULL se ci sono errori durante l'allocazione della memoria
 
-    s->id = id;
     s->cat = cat;
     s->urgenza = urgenza;
     s->st = st;
+
+    //TO DO: GENERAZIONE ID
+    strncopy(s->id, id, sizeof(s->id) - 1);
+    s->nome[sizeof(s->id) - 1] = '\0';
 
     strncopy(s->nome, nome, sizeof(s->nome) - 1);
     s->nome[sizeof(s->nome) - 1] = '\0';
@@ -42,8 +48,9 @@ void libera_segnalazione(item s){
 }
 
 /****Get****/
+//Queste funzioni restituiscono i parametri di una segnalazione data in input
 
-int get_id(item s){
+char* get_id(item s){
     return s->id;
 }
 

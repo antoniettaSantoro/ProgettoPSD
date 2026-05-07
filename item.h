@@ -20,9 +20,10 @@ typedef struct segnalazione *item;
 /****Gestione della Memoria****/
 
 //Crea una nuova segnalazione e restituisce un puntatore ad essa.
-//Prende in input; id, nome del cittadino, categoria del problema, descrizione, data di inserimento, livello di urgenza, stato della segnalazione
+//Prende in input: id, nome del cittadino, categoria del problema, descrizione, data di inserimento,
+//livello di urgenza, stato della segnalazione
 //Nome max 50 caratteri, Descrizione max 100 caratteri
-item crea_segnalazione(int id, char* nome, categoria cat, char* descrizione, char* data, int urgenza, stato st);
+item crea_segnalazione(char* id, char* nome, categoria cat, char* descrizione, char* data, int urgenza, stato st);
 
 //Elimina e libera la memoria dato un puntatore a segnalazione in input
 void libera_segnalazione(item s);
@@ -30,7 +31,7 @@ void libera_segnalazione(item s);
 /****Get****/
 //Queste funzioni restituiscono i parametri di una segnalazione data in input
 
-int get_id(item s);
+char* get_id(item s);
 char* get_nome(item s);
 categoria get_cat(item s);
 char* get_descrizione(item s);
