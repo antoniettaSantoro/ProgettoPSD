@@ -16,7 +16,7 @@ struct nodo{
 //Definizione della struttura della tabella hash
 struct hash {
     int dimensione;              
-    struct nodo **tabella;   //Puntatore ad un array di nodi
+    struct nodo **tabella;		//Puntatore ad un array di nodi
 };
 
 /****Funzioni Ausiliari****/
@@ -133,7 +133,7 @@ item ricerca(hashtable h, char* chiave){
 int stampa_Hashtable(hashtable h){
 
 	if(h == NULL)
-        return;                			//Hashmap non è corretta, ritorna 0
+        return 0;                			//Hashmap non è corretta, ritorna 0
 
 	//Cicla tutta la tabella hash e stampa le segnalazioni contenute in tutti i nodi delle liste
 	for(int ind = 0; ind < h->dimensione; ind++){
@@ -153,7 +153,7 @@ int stampa_Hashtable(hashtable h){
 int stampa_Hashtable_file(hashtable h, FILE* f){
 
 	if(h == NULL)
-        return;                			//Hashmap non è corretta, ritorna 0
+        return 0;                			//Hashmap non è corretta, ritorna 0
 	
 	//Cicla tutta la tabella hash e stampa le segnalazioni contenute in tutti i nodi delle liste
 	for(int ind = 0; ind < h->dimensione; ind++){
@@ -163,6 +163,49 @@ int stampa_Hashtable_file(hashtable h, FILE* f){
 		while(attuale){
 			stampa_segnalazione_file(attuale->segn, f);
 
+			attuale = attuale->prossimo;
+    	}
+	}
+
+	return 1;							//Stampa riuscita, ritorna 1
+}
+
+int stampa_Hashtable_stato(hashtable h, stato st){
+
+	if(h == NULL)
+        return 0;                			//Hashmap non è corretta, ritorna 0
+
+	//Cicla tutta la tabella hash e stampa le segnalazioni contenute in tutti i nodi delle liste
+	for(int ind = 0; ind < h->dimensione; ind++){
+
+		struct nodo *attuale = h->tabella[ind];
+
+		while(attuale){
+            if(get_stato(attuale->segn) == st){      //Controlla se lo stato è quello selezionato
+                stampa_segnalazione(attuale->segn);
+
+            }
+			attuale = attuale->prossimo;
+    	}
+	}
+
+	return 1;							//Stampa riuscita, ritorna 1
+}
+
+int stampa_Hashtable_stato_file(hashtable h, stato st, FILE* f){
+
+	if(h == NULL)
+        return 0;                			//Hashmap non è corretta, ritorna 0
+
+	//Cicla tutta la tabella hash e stampa le segnalazioni contenute in tutti i nodi delle liste
+	for(int ind = 0; ind < h->dimensione; ind++){
+
+		struct nodo *attuale = h->tabella[ind];
+
+		while(attuale){
+            if(get_stato(attuale->segn) == st){      //Controlla se lo stato è quello selezionato
+                stampa_segnalazione_file(attuale->segn, f);
+            }
 			attuale = attuale->prossimo;
     	}
 	}

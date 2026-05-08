@@ -32,3 +32,13 @@ int stampa_Hashtable(hashtable h);
 //Se la hashmap in input non è corretta restituisce 0
 //Se la stampa va a buon fine restituisce 1
 int stampa_Hashtable_file(hashtable h, FILE* f);
+
+//Stampa a video tutti gli item il cui stato è quello dato in input
+//Se la hashmap in input non è corretta restituisce 0
+//Se la stampa va a buon fine restituisce 1
+int stampa_Hashtable_stato(hashtable h, stato st);
+
+//Stampa su file tutti gli item il cui stato è quello dato in input
+//Se la hashmap in input non è corretta restituisce 0
+//Se la stampa va a buon fine restituisce 1
+int stampa_Hashtable_stato_file(hashtable h, stato st, FILE* f);
