@@ -17,6 +17,9 @@ struct nodo{
 struct hash {
     int dimensione;              
     struct nodo **tabella;		//Puntatore ad un array di nodi
+    int numelem[5];				//Array che contiene il numero di elementi presenti nella hashmap
+								//divisi per categoria dell'item.
+								//numelem[4] contiene il numero totale di elementi
 };
 
 /****Funzioni Ausiliari****/
@@ -48,7 +51,6 @@ static void libera_lista(struct nodo *p) {
 /****Gestione della Memoria****/
 
 hashtable crea_Hashtable(int dimensione) {
-    int i;
     hashtable h = (struct hash *) malloc(sizeof(struct hash));
     if (h == NULL)
         return NULL;        //ritorna NULL se ci sono errori durante l'allocazione della memoria
@@ -61,6 +63,11 @@ hashtable crea_Hashtable(int dimensione) {
         free(h);            
         return NULL;        //ritorna NULL se ci sono errori durante l'allocazione della memoria
     }
+
+	//Inizializzo i valori di numelem a 0 perché alla creazione la hashmap non contiene nessun item
+	for(int i; i < 5; i++){
+		h->numelem[i] = 0;
+	}
 
     return h;
 }
@@ -106,6 +113,12 @@ int inserisci_Hash(hashtable h, item elem) {
     nuovo->prossimo = h->tabella[ind];
     h->tabella[ind] = nuovo;
 
+	//Incrementa il numero di elementi contenuti nella hashmap
+	h->numelem[4] += 1;
+	categoria n = get_cat(elem);
+	h->numelem[n] += 1; 
+	
+
     return 1;                           //Inserimento riuscito, ritorna 1
 }
 
@@ -127,6 +140,13 @@ item ricerca(hashtable h, char* chiave){
 
     return NULLITEM;
 }
+
+/****Get****/
+
+int get_numelem(hashtable h, int n){
+	return h->numelem[n];
+}
+
 
 /****Stampa****/
 

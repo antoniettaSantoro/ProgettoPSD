@@ -21,6 +21,14 @@ int inserisci_Hash(hashtable h, item elem);
 //Se la hashmap non è corretta restituisce NULLITEM
 item ricerca(hashtable h, char* chiave);
 
+/****Get****/
+
+//Restituisce il numero di elementi presenti nella hashmap divisi per categoria
+//Il parametro n indica la categoria:
+//0 = ILLUMINAZIONE, 1 = GUASTI, 2 = RIFIUTI, 3 = STRADE
+//4 = numero totale di elementi presenti nella hashmap
+int get_numelem(hashtable h, int n);
+
 /****Stampa****/
 
 //Stampa a video l'intera hashmap
