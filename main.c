@@ -1,55 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "item.h"
+#include "gestione.h"
+#include "hashmap.h"
 
-void print_menu(){
-
-    printf("=====================================\n");
-    printf("\t\t\tMENU\n");
-    printf("=====================================\n");
-    printf("0 - Esci\n");
-    printf("1 - Registra Segnalazione\n");
-    printf("2 - Elimina Segnalazione\n");
-    printf("3 - Visualizza Tutte le Segnalazioni\n");
-    printf("4 - Ricerca Segnalazione\n");
-    printf("5 - Aggiorna Stato Segnalazione\n");
-    printf("6 - Visualizza Segnalazioni per Stato\n");
-    printf("7 - Visualizza Segnalazioni più Urgenti\n");
-    printf("8 - Genera Report\n");
-    printf("=====================================\n");
-    printf("\n\n");
-
-}
-
-void print_menu_ricerca(){
-
-    printf("=====================================\n");
-    printf("\t\t\tRICERCA\n");
-    printf("=====================================\n");
-    printf("0 - Indietro\n");
-    printf("1 - Ricerca per ID\n");
-    printf("2 - Ricerca per Categoria\n");
-    printf("=====================================\n");
-    printf("\n\n");
-}
-
-void print_menu_visualizza_stato(){
-
-    printf("=====================================\n");
-    printf("\t\t\t VISUALIZZAZIONE\n");
-    printf("=====================================\n");
-    printf("0 - Indietro\n");
-    printf("1 - Segnalazioni Aperte\n");
-    printf("2 - Segnalazioni Chiuse\n");
-    printf("3 - Segnalazioni In Lavorazione\n");
-    printf("=====================================\n");
-    printf("\n\n");
-
-}
+#define DIM 50
 
 int main(){
+	int scelta;
+	int flag = 1;
 
+	hashtable h = crea_Hashtable(DIM);
+	if(h == NULL){
+		printf("Errore");
+		return 1;
+	}
 
+	while(flag){
+		stampa_menu();
 
+		printf("> ");
+		scanf("%d", &scelta);
+
+		switch (scelta)
+		{
+		    case 0:
+			    flag = 0;
+			    break;
+		    case 1:
+			    registra_segnalazione(h);
+				break;
+			case 2:
+				visualizza_segnalazioni(h);
+				break;
+			case 3:
+				ricerca_segnalazione(h);
+				break;
+			case 4:
+				aggiorna_stato_segnalazione(h);
+				break;
+			case 5:
+				visualizza_segnalazioni_stato(h);	//da scrivere
+				break;
+			case 6:
+				break;
+			case 7:
+				break;
+		    default:
+				printf("Opzione insistente\n");				
+			    break;
+		}
+
+	}
 
 }
