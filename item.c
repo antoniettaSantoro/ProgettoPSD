@@ -7,11 +7,11 @@
 
 //Definizione della struttura segnalazione
 struct segnalazione {
-    char id[10];                     //chiave
+    char id[9];                     //chiave
     char nome[51];
     categoria cat;
     char descrizione[101];
-    char data[10];
+    char data[11];
     int urgenza;
     stato st;
 };
@@ -27,17 +27,16 @@ item crea_segnalazione(char* id, char* nome, categoria cat, char* descrizione, c
     s->urgenza = urgenza;
     s->st = st;
 
-    //TO DO: GENERAZIONE ID
-    strncopy(s->id, id, sizeof(s->id) - 1);
+    strncpy(s->id, id, sizeof(s->id) - 1);
     s->nome[sizeof(s->id) - 1] = '\0';
 
-    strncopy(s->nome, nome, sizeof(s->nome) - 1);
+    strncpy(s->nome, nome, sizeof(s->nome) - 1);
     s->nome[sizeof(s->nome) - 1] = '\0';
 
-    strncopy(s->descrizione, descrizione, sizeof(s->descrizione) - 1);
+    strncpy(s->descrizione, descrizione, sizeof(s->descrizione) - 1);
     s->descrizione[sizeof(s->descrizione) - 1] = '\0';
 
-    strncopy(s->data, data, sizeof(s->data) - 1);
+    strncpy(s->data, data, sizeof(s->data) - 1);
     s->data[sizeof(s->data) - 1] = '\0';
     
     return s;
@@ -80,7 +79,7 @@ stato get_stato(item s){
 
 /*Stato*/
 
-void aggiorna_stato(item s, stato st){
+void modifica_stato(item s, stato st){
     s->st = st;
 }
 

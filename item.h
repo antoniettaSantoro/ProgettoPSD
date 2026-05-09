@@ -42,7 +42,7 @@ stato get_stato(item s);
 /****Stato****/
 
 //Modifica il valore dello stato nella segnalazione data in input
-void aggiorna_stato(item s, stato st);
+void modifica_stato(item s, stato st);
 
 /****Stampa****/
 
