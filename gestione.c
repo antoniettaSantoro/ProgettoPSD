@@ -112,6 +112,17 @@ void stampa_intestazione_tabella(){
 	printf("\n");
 }
 
+void stampa_intestazione_tabella_file(FILE* f){
+	fprintf(f, "\n");
+	fprintf(f, "Indici di Categoria:ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3\n");
+	fprintf(f, "Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2\n");
+	fprintf(f, "Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'\n");
+	fprintf(f, "\n");
+	fprintf(f, "ID\tNOME\tCATEGORIA\tDATA\tURGENZA\tSTATO\tDESCRIZIONE\n");
+	fprintf(f, "\n");
+}
+
+
 /****Ricerca****/
 
 //Ricerca una segnalazione tramite id dato in input
@@ -208,6 +219,42 @@ int aggiorna_stato(hashtable h, char* id){
 	printf("Stato aggiornato\n");
 
 	return 1;
+}
+
+/****Generazione Report****/
+
+void stampa_categoria_file(hashtable h, categoria cat, int num, FILE* f){
+
+	char* id;
+
+	stampa_intestazione_tabella_file(f);
+
+	for(int i = 1; i <= num; i++){
+		id = genera_id(cat, i);
+		item trovato = ricerca(h, id);
+
+		stampa_segnalazione_file(trovato, f);
+	}
+
+	fprintf(f, "\n");
+}
+
+void stampa_segnalazioni_categoria_file(hashtable h, categoria cat, int n, FILE* f){
+		
+	fprintf(f, "CATEGORIA %d: ", cat);
+	if(cat == ILLUMINAZIONE)	fprintf(f, "ILLUMINAZIONE\n");
+	else if(cat == GUASTI)		fprintf(f, "GUASTI\n");
+	else if(cat == RIFIUTI)		fprintf(f, "RIFIUTI\n");
+	else if(cat == STRADE);		fprintf(f, "STRADE\n");
+	fprintf(f, "Numero segnalazioni: %d\n", n);
+	fprintf(f, "========================================");
+	
+	if(n != 0){
+		stampa_intestazione_tabella_file(f);
+		stampa_segnalazioni_categoria_file(h, cat, n, f);
+	}	
+
+	fprintf(f, "========================================");
 }
 
 /*******************************/
@@ -406,4 +453,65 @@ void aggiorna_stato_segnalazione(hashtable h){
 	}
 
 	return;
+}
+
+void genera_report(hashtable h){
+
+	int num[5];
+	for(int i = 0; i < 5; i++){
+		num[i] = get_numelem(h, i);
+	}
+
+	printf("==========================\n");
+	printf("\t\tREPORT\n");
+	printf("==========================\n");
+	printf("Il report viene creato nel file \"report.txt\"\n");
+	
+	FILE* f = fopen("report.txt", "w");
+	if(f == NULL){
+		printf("Errore. Impossibile aprire il file\n");
+		return;
+	}
+
+	fprintf(f, "========================================");
+	fprintf(f, "Numero totale segnalazioni: %d\n", num[4]);
+	fprintf(f, "========================================");
+	fprintf(f, "Segnalazioni per Categoria\n");
+	fprintf(f, "========================================");
+
+	for(int i = 0; i < 4; i++){
+		stampa_segnalazioni_categoria_file(h, i, num[i], f);
+	}
+
+	fprintf(f, "========================================");
+	fprintf(f, "Segnalazioni per Stato\n");
+	fprintf(f, "========================================");
+
+	fprintf(f, "Segnalazioni APERTE\n");
+	stampa_intestazione_tabella_file(f);
+	stampa_Hashtable_stato_file(h, 0, f);
+	fprintf(f, "========================================");
+
+	fprintf(f, "Segnalazioni CHIUSE\n");
+	stampa_intestazione_tabella_file(f);
+	stampa_Hashtable_stato_file(h, 2, f);
+	fprintf(f, "========================================");
+
+	int max = 0;
+	for(int i = 1; i < 4; i++){
+		if(num[i] > num[max]){
+			max = i;
+		}
+	}
+	
+	fprintf(f, "La categoria con più segnalazioni è: ");
+
+	if(max == 0)	fprintf(f, "ILLUMINAZIONE");
+	else if(max == 1)		fprintf(f, "GUASTI");
+	else if(max == 2)		fprintf(f, "RIFIUTI");
+	else if(max == 3);		fprintf(f, "STRADE");
+
+	fprintf(f, " con %d segnalazioni\n", num[max]);
+	fprintf(f, "========================================");
+
 }
