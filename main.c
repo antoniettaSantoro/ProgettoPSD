@@ -3,6 +3,7 @@
 #include "gestione.h"
 #include "hashmap.h"
 #include "item.h"
+#include "utils.h"
 
 #define DIM 50
 
@@ -25,6 +26,7 @@ int main(){
 		switch (scelta)
 		{
 		    case 0:
+				libera_Hashtable(h);
 			    flag = 0;
 			    break;
 		    case 1:

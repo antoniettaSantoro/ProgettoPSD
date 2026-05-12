@@ -4,65 +4,18 @@
 #include "item.h"
 #include "hashmap.h"
 #include "gestione.h"
+#include "utils.h"
 
 /**************************/
 /****FUNZIONI AUSILIARI****/
 /**************************/
-
-/****Gestione Id****/
-
-//Genera id validi, dati una categoria e un numero
-//ES: 	cat = 0, num = 35
-//		id = "ILL00035"
-char* genera_id(categoria cat, int num){
-
-	char* id = (char*) malloc(9*sizeof(char));
-	if(id == NULL)	return NULL;
-
-	char* id_cat;
-
-	if(cat == ILLUMINAZIONE)	id_cat = "ILL";
-	else if(cat == GUASTI)		id_cat = "GUA";
-	else if(cat == RIFIUTI)		id_cat = "RIF";
-	else if(cat == STRADE);		id_cat = "STR";
-
-	snprintf(id, 9, "%s%05d", id_cat, num);			//Crea una stringa dal format "CAT00000" nella variabile id
-
-	return id;
-}
-
-//Valida gli id dati in input
-//Restituisce 1 se l'id è valido, 0 se non lo è
-int valida_id(char* id){
-
-	if(strlen(id) < 8)		return 0;
-
-	char cat[4];
-	strncpy(cat, id, 3);
-	cat[3] = '\0';
-
-	if(strcmp(cat, "ILL") != 0)			return 0;
-	else if(strcmp(cat, "GUA") != 0)	return 0;
-	else if(strcmp(cat, "RIF") != 0)	return 0;
-	else if(strcmp(cat, "STR") != 0)	return 0;
-
-	char n[6];
-
-	strcpy(cat, id+3);
-	n[5] = '\0';
-	int num = atoi(n);				//Restituisce 0 se il valore non è un numero 
-
-	if (num = 0)	return 0;		//Gli id validi iniziano dal numero 1
-
-	return 1;
-}
 
 /****Stampa****/
 
 void stampa_menu(){
 	printf("\n");
     printf("=====================================\n");
-    printf("\t\t\tMENU\n");
+    printf("\t\tMENU\n");
     printf("=====================================\n");
     printf("0 - Esci\n");
     printf("1 - Registra Segnalazione\n");
@@ -79,7 +32,7 @@ void stampa_menu(){
 void stampa_menu_ricerca(){
 	printf("\n");
     printf("=====================================\n");
-    printf("\t\t\tRICERCA\n");
+    printf("\t\tRICERCA\n");
     printf("=====================================\n");
     printf("0 - Indietro\n");
     printf("1 - Ricerca per ID\n");
@@ -91,7 +44,7 @@ void stampa_menu_ricerca(){
 void stampa_menu_visualizza_stato(){
 	printf("\n");
     printf("=====================================\n");
-    printf("\t\t\t VISUALIZZAZIONE\n");
+    printf("\t\tVISUALIZZAZIONE\n");
     printf("=====================================\n");
     printf("0 - Indietro\n");
     printf("1 - Segnalazioni Aperte\n");
@@ -205,8 +158,9 @@ int aggiorna_stato(hashtable h, char* id){
 	printf("Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2\n");
 
 	while(1){
-		printf("Inserisci il nuovo stato: ");	
-	
+		printf("Inserisci il nuovo stato: ");
+
+		svuota_input_buffer();
 		scanf("%d", &st);
 		if(st < 0 || st > 2){
 			printf("Valore inserito non valido\n");
@@ -245,16 +199,15 @@ void stampa_segnalazioni_categoria_file(hashtable h, categoria cat, int n, FILE*
 	if(cat == ILLUMINAZIONE)	fprintf(f, "ILLUMINAZIONE\n");
 	else if(cat == GUASTI)		fprintf(f, "GUASTI\n");
 	else if(cat == RIFIUTI)		fprintf(f, "RIFIUTI\n");
-	else if(cat == STRADE);		fprintf(f, "STRADE\n");
+	else if(cat == STRADE)		fprintf(f, "STRADE\n");
 	fprintf(f, "Numero segnalazioni: %d\n", n);
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 	
 	if(n != 0){
-		stampa_intestazione_tabella_file(f);
-		stampa_segnalazioni_categoria_file(h, cat, n, f);
+		stampa_categoria_file(h, cat, n, f);
 	}	
 
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 }
 
 /*******************************/
@@ -267,22 +220,36 @@ void registra_segnalazione(hashtable h){
 	char nome[51];
 	char descrizione[101];
 	char data[11];
-	categoria cat;
+	int g, m, a;
+	int cat;
 	int urgenza;
 	stato st = APERTO;					//Alla creazione ogni segnalazione è automaticamente aperta
 
-	getchar();							//Svuoto il buffer
+
+	svuota_input_buffer();
 
 	printf("\n");
 	printf("Nome: ");
 	scanf("%50[^\n]", nome);
 
-	getchar();							//Svuoto il buffer
-
-	printf("Data [Formato 'gg/mm/aaaa']: ");
-	scanf("%10[^\n]", data);
+	svuota_input_buffer();
 
 	while(1){
+		svuota_input_buffer();
+		printf("Data [Formato 'gg mm aaaa']: ");
+		if(scanf("%d %d %d", &g, &m, &a) != 3) {
+			printf("Formato data non valido.\n");
+		}
+		else if(valida_data(g, m, a) == 0){
+			printf("Data non valida\n");
+		}
+		else	break;
+	}
+
+	snprintf(data, 11, "%02d/%02d/%04d", g, m, a);
+
+	while(1){
+		svuota_input_buffer();
 		printf("Categoria [0 = ILLUMINAZIONE, 1 = GUASTI, 2 = RIFIUTI, 3 = STRADE]: ");
 		scanf("%d", &cat);
 		if(cat < 0 || cat > 3){
@@ -291,24 +258,25 @@ void registra_segnalazione(hashtable h){
 		else	break;			
 	}
 	
-	while(1){	
+	while(1){
+		svuota_input_buffer();
 		printf("Urgenza [Usare un numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente']: ");
 		scanf("%d", &urgenza);
-			if(urgenza < 1 || urgenza > 10){
-				printf("Valore inserito non valido\n");
-			}
-			else	break;
+		if(urgenza < 1 || urgenza > 10){
+			printf("Valore inserito non valido\n");
+		}
+		else	break;
 	}
 
-	getchar();							//Svuoto il buffer
+	svuota_input_buffer();
 
 	printf("Descrizione: ");
 	scanf("%100[^\n]", descrizione);
 
 	int num = get_numelem(h, cat) + 1;
-	char* id = genera_id(cat, num);
+	char* id = genera_id((categoria) cat, num);
 
-	item s = crea_segnalazione(id, nome, cat, descrizione, data, urgenza, st);
+	item s = crea_segnalazione(id, nome, (categoria) cat, descrizione, data, urgenza, st);
 	int val = inserisci_Hash(h, s);
 
 	if(val == 0){
@@ -340,7 +308,7 @@ void ricerca_segnalazione(hashtable h){
 
 		printf("> ");
 
-		getchar();
+		svuota_input_buffer();
 		scanf("%d", &scelta);
 
 		switch (scelta)
@@ -351,6 +319,7 @@ void ricerca_segnalazione(hashtable h){
 			case 1:
 				char id[9];
 				
+				svuota_input_buffer();
 				printf("\n");
 				printf("Id: ");
 				scanf("%8[^\n]", id);
@@ -368,8 +337,9 @@ void ricerca_segnalazione(hashtable h){
 				}
 				break;
 			case 2:
-				categoria cat;
+				int cat;
 
+				svuota_input_buffer();
 				printf("\n");
 				printf("Categoria [0 = ILLUMINAZIONE, 1 = GUASTI, 2 = RIFIUTI, 3 = STRADE]: ");
 				scanf("%d", &cat);
@@ -378,7 +348,7 @@ void ricerca_segnalazione(hashtable h){
 					break;
 				}
 
-				val = ricerca_categoria(h, cat);
+				val = ricerca_categoria(h, (categoria) cat);
 				if(val == 0){
 					printf("Nessuna segnalazione trovata\n");
 					flag = 0;
@@ -401,8 +371,9 @@ void visualizza_segnalazioni_stato(hashtable h){
 	int flag = 1;	
 
 	while(flag){
-		stampa_menu_visualizza_stato;
+		stampa_menu_visualizza_stato();
 
+		svuota_input_buffer();
 		printf("> ");
 		scanf("%d", &scelta);
 
@@ -435,7 +406,8 @@ void visualizza_segnalazioni_stato(hashtable h){
 void aggiorna_stato_segnalazione(hashtable h){
 
 	char id[9];
-	
+
+	svuota_input_buffer();
 	printf("\n");
 	printf("Id: ");
 	scanf("%8[^\n]", id);
@@ -473,29 +445,29 @@ void genera_report(hashtable h){
 		return;
 	}
 
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 	fprintf(f, "Numero totale segnalazioni: %d\n", num[4]);
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 	fprintf(f, "Segnalazioni per Categoria\n");
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 
 	for(int i = 0; i < 4; i++){
 		stampa_segnalazioni_categoria_file(h, i, num[i], f);
 	}
 
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 	fprintf(f, "Segnalazioni per Stato\n");
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 
 	fprintf(f, "Segnalazioni APERTE\n");
 	stampa_intestazione_tabella_file(f);
 	stampa_Hashtable_stato_file(h, 0, f);
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 
 	fprintf(f, "Segnalazioni CHIUSE\n");
 	stampa_intestazione_tabella_file(f);
 	stampa_Hashtable_stato_file(h, 2, f);
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 
 	int max = 0;
 	for(int i = 1; i < 4; i++){
@@ -509,9 +481,10 @@ void genera_report(hashtable h){
 	if(max == 0)	fprintf(f, "ILLUMINAZIONE");
 	else if(max == 1)		fprintf(f, "GUASTI");
 	else if(max == 2)		fprintf(f, "RIFIUTI");
-	else if(max == 3);		fprintf(f, "STRADE");
+	else if(max == 3)		fprintf(f, "STRADE");
 
 	fprintf(f, " con %d segnalazioni\n", num[max]);
-	fprintf(f, "========================================");
+	fprintf(f, "================================================================================\n");
 
+	fclose(f);
 }
