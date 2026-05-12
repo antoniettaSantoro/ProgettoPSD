@@ -1,3 +1,5 @@
+#include "hashmap.h"
+
 //Stampa il menu principale del programma
 void stampa_menu();
 
@@ -19,3 +21,11 @@ void ricerca_segnalazione(hashtable h);
 //Funzione che aggiorna lo stato di una segnalazione
 //Durante la sua esecuzione l'utente specifica l'id della segnalazione che vuole modificare
 void aggiorna_stato_segnalazione(hashtable h);
+
+//Funzione che genera e stampa su file un report con:
+//numero totale di segnalazioni,
+//segnalazioni per categoria,
+//segnalazioni aperte e chiuse,
+//numero di categoria con più segnalazioni.
+//Il file generato è 'report.txt'
+void genera_report(hashtable h);

@@ -17,23 +17,16 @@
 char* genera_id(categoria cat, int num){
 
 	char* id = (char*) malloc(9*sizeof(char));
-	char* n = (char*) malloc(6*sizeof(char));
-	if(id == NULL || n == NULL)	return NULL;
+	if(id == NULL)	return NULL;
 
-	n = itoa(num, n, 10);
-	int len = strlen(n);
+	char* id_cat;
 
-	if(cat == ILLUMINAZIONE)	id = strcpy(id, "ILL");
-	else if(cat == GUASTI)		id = strcpy(id, "GUA");
-	else if(cat == RIFIUTI)		id = strcpy(id, "RIF");
-	else if(cat == STRADE);		id = strcpy(id, "STR");
+	if(cat == ILLUMINAZIONE)	id_cat = "ILL";
+	else if(cat == GUASTI)		id_cat = "GUA";
+	else if(cat == RIFIUTI)		id_cat = "RIF";
+	else if(cat == STRADE);		id_cat = "STR";
 
-	if(len == 1)				id = strcat(id, "0000");
-	else if(len == 2)			id = strcat(id, "000");
-	else if(len == 3)			id = strcat(id, "00");
-	else if(len == 4)			id = strcat(id, "0");
-
-	id = strcat(id, n);
+	snprintf(id, 9, "%s%05d", id_cat, num);			//Crea una stringa dal format "CAT00000" nella variabile id
 
 	return id;
 }
@@ -210,7 +203,7 @@ int aggiorna_stato(hashtable h, char* id){
 		else	break;			
 	}
 
-	modifica_stato(h, st);
+	modifica_stato(trovato, st);
 
 	printf("Stato aggiornato\n");
 
@@ -231,11 +224,13 @@ void registra_segnalazione(hashtable h){
 	int urgenza;
 	stato st = APERTO;					//Alla creazione ogni segnalazione è automaticamente aperta
 
+	getchar();							//Svuoto il buffer
+
 	printf("\n");
 	printf("Nome: ");
 	scanf("%50[^\n]", nome);
 
-	//CONTROLLA: buffer??
+	getchar();							//Svuoto il buffer
 
 	printf("Data [Formato 'gg/mm/aaaa']: ");
 	scanf("%10[^\n]", data);
@@ -257,6 +252,8 @@ void registra_segnalazione(hashtable h){
 			}
 			else	break;
 	}
+
+	getchar();							//Svuoto il buffer
 
 	printf("Descrizione: ");
 	scanf("%100[^\n]", descrizione);
@@ -285,16 +282,18 @@ void visualizza_segnalazioni(hashtable h){
 	return;
 }
 
-
 void ricerca_segnalazione(hashtable h){
 
+	int val;
 	int scelta;
 	int flag = 1;	
 
 	while(flag){
-		stampa_menu_ricerca;
+		stampa_menu_ricerca();
 
 		printf("> ");
+
+		getchar();
 		scanf("%d", &scelta);
 
 		switch (scelta)
@@ -309,7 +308,7 @@ void ricerca_segnalazione(hashtable h){
 				printf("Id: ");
 				scanf("%8[^\n]", id);
 
-				int val = valida_id(id);
+				val = valida_id(id);
 				if(val == 0){
 					printf("Id non valido\n");
 					break;
@@ -332,7 +331,7 @@ void ricerca_segnalazione(hashtable h){
 					break;
 				}
 
-				int val = ricerca_categoria(h, cat);
+				val = ricerca_categoria(h, cat);
 				if(val == 0){
 					printf("Nessuna segnalazione trovata\n");
 					flag = 0;
@@ -342,6 +341,7 @@ void ricerca_segnalazione(hashtable h){
 				printf("Opzione insistente\n");			
 				break;
 		}
+		break;
 	}
 
 	return;
@@ -349,6 +349,7 @@ void ricerca_segnalazione(hashtable h){
 
 void visualizza_segnalazioni_stato(hashtable h){
 
+	int val;
 	int scelta;
 	int flag = 1;	
 
@@ -364,15 +365,15 @@ void visualizza_segnalazioni_stato(hashtable h){
 				flag = 0;
 				break;
 			case 1:
-				int val = visualizza_stato(h, 0);
+				val = visualizza_stato(h, 0);
 				if(val == 0)		flag = 0;
 				break;
 			case 2:
-				int val = visualizza_stato(h, 1);
+				val = visualizza_stato(h, 1);
 				if(val == 0)		flag = 0;
 				break;
 			case 3:
-				int val = visualizza_stato(h, 2);
+				val = visualizza_stato(h, 2);
 				if(val == 0)		flag = 0;
 				break;
 			default:

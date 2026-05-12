@@ -1,3 +1,5 @@
+#include "item.h"
+
 typedef struct hash *hashtable;
 
 /****Gestione della Memoria****/

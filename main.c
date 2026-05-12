@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "gestione.h"
 #include "hashmap.h"
+#include "item.h"
 
 #define DIM 50
 
@@ -39,11 +40,12 @@ int main(){
 				aggiorna_stato_segnalazione(h);
 				break;
 			case 5:
-				visualizza_segnalazioni_stato(h);	//da scrivere
+				visualizza_segnalazioni_stato(h);
 				break;
 			case 6:
 				break;
 			case 7:
+				genera_report(h);
 				break;
 		    default:
 				printf("Opzione insistente\n");				
