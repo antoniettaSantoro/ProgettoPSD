@@ -57,6 +57,7 @@ int valida_id(char* id){
 	return 1;
 }
 
+/****Data****/
 
 int valida_data(int g, int m, int a){
 	if(a < 2000 || m < 1 || m > 12 || g < 1)	return 0;

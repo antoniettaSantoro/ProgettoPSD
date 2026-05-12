@@ -18,6 +18,7 @@ int main(){
 	}
 
 	while(flag){
+		system("cls || clear");					//Pulisce lo schermo		
 		stampa_menu();
 
 		printf("> ");
