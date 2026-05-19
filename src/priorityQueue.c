@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "priorityQueue.h"
 #include "item.h"
+#include "data.h"
 
 /***Definizioni Strutture****/
 
@@ -33,7 +34,7 @@ static void scendi(PQueue q)
 			}
 			//Se le urgenze sono uguali, controlla il secondo criterio di priorità: data
 			//Vengono considerate più urgenti le richieste più vecchie
-			else if(get_urgenza(q->vet[2*i]) == get_urgenza(q->vet[2*i + 1]) && confronta_date(q->vet[2*1], q->vet[2*i + 1]) == 1){
+			else if(get_urgenza(q->vet[2*i]) == get_urgenza(q->vet[2*i + 1]) && confronta_date(get_data(q->vet[2*1]), get_data(q->vet[2*i + 1])) == 1){
 				pos = 2*1;
 			}
 			else{
@@ -45,17 +46,17 @@ static void scendi(PQueue q)
 		else 
 			break; 				//Interrompe il ciclo se non ha figli
 			
-			//Scambia i valori se il figlio ha un valore più grande del nodo
-			//Primo criterio: urgenza
-			if(get_urgenza(q->vet[pos]) > get_urgenza(q->vet[i]))												
-			{
+		//Scambia i valori se il figlio ha un valore più grande del nodo
+		//Primo criterio: urgenza
+		if(get_urgenza(q->vet[pos]) > get_urgenza(q->vet[i]))												
+		{
 				temp = q->vet[i];
 				q->vet[i] = q->vet[pos];
 				q->vet[pos] = temp;
 				i = pos;			//Continua a scendere nella coda
 		}
 		//Secondo criterio: data
-		else if(get_urgenza(q->vet[pos]) > get_urgenza(q->vet[i]) && confronta_date(q->vet[pos], q->vet[i]) == 1){
+		else if(get_urgenza(q->vet[pos]) > get_urgenza(q->vet[i]) && confronta_date(get_data(q->vet[pos]), get_data(q->vet[i])) == 1){
 			temp = q->vet[i];
 			q->vet[i] = q->vet[pos];
 			q->vet[pos] = temp;
@@ -86,7 +87,7 @@ static void sali(PQueue q)
 		}
 		//Se le urgenze sono uguali, controlla il secondo criterio di priorità: data
 		//Vengono considerate più urgenti le richieste più vecchie
-		else if(get_urgenza(q->vet[pos]) > get_urgenza(q->vet[i]) && confronta_date(q->vet[pos], q->vet[i]) == 1){
+		else if(get_urgenza(q->vet[pos]) > get_urgenza(q->vet[i]) && confronta_date(get_data(q->vet[pos]), get_data(q->vet[i])) == 1){
 			temp = q->vet[i];
 			q->vet[i] = q->vet[pos];
 			q->vet[pos] = temp;
@@ -94,7 +95,7 @@ static void sali(PQueue q)
 			i = pos / 2; 		//Continua a salire nella coda
 		}
 		else
-		break;				//Termina se non sono necessari altri scambi
+			break;				//Termina se non sono necessari altri scambi
 	}
 }
 
@@ -150,7 +151,7 @@ item get_max_urgente(PQueue q)
 	//Se lo stato dell'item è CHIUSO, questo viene eliminato dalla coda a priorità.
 	//Continua a farlo fino a quando lo stato dell'elemento in cima non è CHIUSO
 	while(get_stato(q->vet[1]) == CHIUSO){
-		if(vuota_PQ == 0)	return NULLITEM;	//Ritorna NULLITEM se la coda è vuota
+		if(vuota_PQ(q) == 0)	return NULLITEM;	//Ritorna NULLITEM se la coda è vuota
 		deleteMax(q);
 	}
 

@@ -23,7 +23,7 @@ void ricerca_segnalazione(hashtable h);
 //Durante la sua esecuzione l'utente specifica l'id della segnalazione che vuole modificare
 void aggiorna_stato_segnalazione(hashtable h);
 
-void visualizza_sengalazione_urgente(PQueue q);
+void visualizza_segnalazione_urgente(PQueue q);
 
 //Funzione che genera e stampa su file un report con:
 //numero totale di segnalazioni,
