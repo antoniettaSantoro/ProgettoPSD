@@ -17,9 +17,3 @@ char* genera_id(categoria cat, int num);
 //Valida gli id dati in input
 //Restituisce 1 se l'id è valido, 0 se non lo è
 int valida_id(char* id);
-
-/****Data****/
-
-//Valida la data in input
-//Restituisce 1 se la data è valida, 0 se non lo è
-int valida_data(int g, int m, int a);

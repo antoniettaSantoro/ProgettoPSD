@@ -56,17 +56,3 @@ int valida_id(char* id){
 
 	return 1;
 }
-
-/****Data****/
-
-int valida_data(int g, int m, int a){
-	if(a < 2000 || m < 1 || m > 12 || g < 1)	return 0;
-
-    int giorni[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};		//Giorni in ogni mese
-	
-	if(a%4 == 0)	giorni[2] = 29;			//Controllo anno bisestile
-
-	if(g > giorni[m])	return 0;
-
-	return 1;
-}

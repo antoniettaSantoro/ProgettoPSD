@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "item.h"
+#include "data.h"
 
 /****Definizioni Strutture****/
 
@@ -11,14 +12,14 @@ struct segnalazione {
     char nome[51];
     categoria cat;
     char descrizione[101];
-    char data[11];
+    data dt;
     int urgenza;
     stato st;
 };
 
 /****Gestione della Memoria****/
 
-item crea_segnalazione(char* id, char* nome, categoria cat, char* descrizione, char* data, int urgenza, stato st){
+item crea_segnalazione(char* id, char* nome, categoria cat, char* descrizione, data data, int urgenza, stato st){
     item s = (item) malloc(sizeof(struct segnalazione));
     if(s == NULL)
         return NULL;    //ritorna NULL se ci sono errori durante l'allocazione della memoria
@@ -26,6 +27,7 @@ item crea_segnalazione(char* id, char* nome, categoria cat, char* descrizione, c
     s->cat = cat;
     s->urgenza = urgenza;
     s->st = st;
+    s->dt = data;
 
     strncpy(s->id, id, sizeof(s->id) - 1);
     s->nome[sizeof(s->id) - 1] = '\0';
@@ -35,14 +37,12 @@ item crea_segnalazione(char* id, char* nome, categoria cat, char* descrizione, c
 
     strncpy(s->descrizione, descrizione, sizeof(s->descrizione) - 1);
     s->descrizione[sizeof(s->descrizione) - 1] = '\0';
-
-    strncpy(s->data, data, sizeof(s->data) - 1);
-    s->data[sizeof(s->data) - 1] = '\0';
     
     return s;
 }
 
 void libera_segnalazione(item s){
+    libera_data(s->dt);
     free(s);
 }
 
@@ -65,8 +65,8 @@ char* get_descrizione(item s){
     return s->descrizione;
 }
 
-char* get_data(item s){
-    return s->data;
+data get_data(item s){
+    return s->dt;
 }
 
 int get_urgenza(item s){
@@ -86,9 +86,13 @@ void modifica_stato(item s, stato st){
 /****Stampa****/
 
 void stampa_segnalazione(item s){
-    printf("%s\t%s\t%d\t%s\t%d\t%d\t%s\n", s->id, s->nome, s->cat, s->data, s->urgenza, s->st, s->descrizione);
+    printf("%s\t%s\t%d\t", s->id, s->nome, s->cat);
+    stampa_data(s->dt);
+    printf("\t%d\t%d\t%s\n",s->urgenza, s->st, s->descrizione);
 }
 
 void stampa_segnalazione_file(item s, FILE* f){
-    fprintf(f, "%s\t%s\t%d\t%s\t%d\t%d\t%s\n", s->id, s->nome, s->cat, s->data, s->urgenza, s->st, s->descrizione);
-}
+    fprintf(f, "%s\t%s\t%d\t", s->id, s->nome, s->cat);
+    stampa_data_file(s->dt, f);
+    printf(f, "\t%d\t%d\t%s\n",s->urgenza, s->st, s->descrizione);
+    }

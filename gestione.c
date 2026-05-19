@@ -6,6 +6,7 @@
 #include "gestione.h"
 #include "utils.h"
 #include "priorityQueue.h"
+#include "data.h"
 
 /**************************/
 /****FUNZIONI AUSILIARI****/
@@ -228,7 +229,7 @@ void registra_segnalazione(hashtable h, PQueue q){
 
 	char nome[51];
 	char descrizione[101];
-	char data[11];
+	data d;
 	int g, m, a;
 	int cat;
 	int urgenza;
@@ -247,13 +248,18 @@ void registra_segnalazione(hashtable h, PQueue q){
 		if(scanf("%d %d %d", &g, &m, &a) != 3) {
 			printf("Formato data non valido.\n");
 		}
-		else if(valida_data(g, m, a) == 0){
-			printf("Data non valida\n");
-		}
-		else	break;
-	}
+		else{
+			d = crea_data(g, m, a);
 
-	snprintf(data, 11, "%02d/%02d/%04d", g, m, a);
+			if(d == NULLDATA){
+				printf("Data non valida.\n");
+			}
+			else if(d == NULL){
+				printf("Errore durante allocazione memoria.\n");
+			}
+			else break;
+		}
+	}
 
 	while(1){
 		svuota_input_buffer();
@@ -283,7 +289,7 @@ void registra_segnalazione(hashtable h, PQueue q){
 	int num = get_numelem(h, cat) + 1;
 	char* id = genera_id((categoria) cat, num);
 
-	item s = crea_segnalazione(id, nome, (categoria) cat, descrizione, data, urgenza, st);
+	item s = crea_segnalazione(id, nome, (categoria) cat, descrizione, d, urgenza, st);
 	int val = inserisci_Hash(h, s);
 	inserisci_PQ(q, s);
 
