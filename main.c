@@ -4,6 +4,7 @@
 #include "hashmap.h"
 #include "item.h"
 #include "utils.h"
+#include "priorityQueue.h"
 
 #define DIM 50
 
@@ -12,6 +13,8 @@ int main(){
 	int flag = 1;
 
 	hashtable h = crea_Hashtable(DIM);
+	PQueue q = crea_PQ(DIM);
+
 	if(h == NULL){
 		printf("Errore");
 		return 1;
@@ -28,10 +31,11 @@ int main(){
 		{
 		    case 0:
 				libera_Hashtable(h);
+				libera_PQ(q);
 			    flag = 0;
 			    break;
 		    case 1:
-			    registra_segnalazione(h);
+			    registra_segnalazione(h, q);
 				break;
 			case 2:
 				visualizza_segnalazioni(h);
@@ -46,6 +50,7 @@ int main(){
 				visualizza_segnalazioni_stato(h);
 				break;
 			case 6:
+				visualizza_sengalazione_urgente(q);
 				break;
 			case 7:
 				genera_report(h);

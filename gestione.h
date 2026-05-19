@@ -1,11 +1,12 @@
 #include "hashmap.h"
+#include "priorityQueue.h"
 
 //Stampa il menu principale del programma
 void stampa_menu();
 
 //Funzione che aggiunge una segnalazione alla hashmap.
 //Durante la sua esecuzione chiede all'utente di inserire i parametri della segnalazione
-void registra_segnalazione(hashtable h);
+void registra_segnalazione(hashtable h, PQueue q);
 
 //Stampa a video tutte le segnalazioni presenti nella hashmap
 void visualizza_segnalazioni(hashtable h);
@@ -21,6 +22,8 @@ void ricerca_segnalazione(hashtable h);
 //Funzione che aggiorna lo stato di una segnalazione
 //Durante la sua esecuzione l'utente specifica l'id della segnalazione che vuole modificare
 void aggiorna_stato_segnalazione(hashtable h);
+
+void visualizza_sengalazione_urgente(PQueue q);
 
 //Funzione che genera e stampa su file un report con:
 //numero totale di segnalazioni,

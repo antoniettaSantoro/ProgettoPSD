@@ -5,6 +5,7 @@
 #include "hashmap.h"
 #include "gestione.h"
 #include "utils.h"
+#include "priorityQueue.h"
 
 /**************************/
 /****FUNZIONI AUSILIARI****/
@@ -216,7 +217,7 @@ void stampa_segnalazioni_categoria_file(hashtable h, categoria cat, int n, FILE*
 /*******************************/
 
 
-void registra_segnalazione(hashtable h){
+void registra_segnalazione(hashtable h, PQueue q){
 
 	system("cls || clear");					//Pulisce lo schermo
 
@@ -284,6 +285,7 @@ void registra_segnalazione(hashtable h){
 
 	item s = crea_segnalazione(id, nome, (categoria) cat, descrizione, data, urgenza, st);
 	int val = inserisci_Hash(h, s);
+	inserisci_PQ(q, s);
 
 	if(val == 0){
 		printf("La segnalazione inserita è già presente\n");
@@ -461,6 +463,34 @@ void aggiorna_stato_segnalazione(hashtable h){
 		}
 	}
 
+	svuota_input_buffer();
+	printf("\nPremere INVIO per continuare...");
+	getchar();
+
+	return;
+}
+
+void visualizza_segnalazione_urgente(PQueue q){
+	
+	system("cls || clear");					//Pulisce lo schermo
+
+	printf("\n");
+    printf("=====================================\n");
+    printf("\tVISUALIZZA URGENTE\n");
+    printf("=====================================\n");
+
+	item segn = get_max_urgente(q);
+
+	if(segn == NULLITEM){
+		printf("Nessuna segnalazione urgente\n");
+	}
+	else{
+		printf("La segnalazione più urgente è:\n");
+
+		stampa_intestazione_tabella();
+		stampa_segnalazione(segn);
+	}
+	
 	svuota_input_buffer();
 	printf("\nPremere INVIO per continuare...");
 	getchar();
