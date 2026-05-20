@@ -25,7 +25,7 @@ void stampa_menu(){
     printf("3 - Ricerca Segnalazione\n");
     printf("4 - Aggiorna Stato Segnalazione\n");
     printf("5 - Visualizza Segnalazioni per Stato\n");
-    printf("6 - Visualizza Segnalazioni più Urgenti\n");
+    printf("6 - Visualizza Segnalazione più Urgente\n");
     printf("7 - Genera Report\n");
     printf("=====================================\n");
     printf("\n\n");
@@ -139,6 +139,7 @@ int visualizza_stato(hashtable h, stato st){
 }
 
 //Aggiorna lo stato della segnalazione con id dato in input
+//Non è possibile modificare lo stato da CHIUSO
 //Restituisce 0 se la segnalazione non è stata trovata e 1 se l'operazione va a buon fine
 int aggiorna_stato(hashtable h, char* id){
 
@@ -156,6 +157,11 @@ int aggiorna_stato(hashtable h, char* id){
 	if(st == APERTO)				printf("APERTO\n");
 	else if(st == INLAVORAZIONE)	printf("IN LAVORAZIONE\n");
 	else if(st == CHIUSO)			printf("CHIUSO\n");
+
+	if(st == CHIUSO){
+		printf("Non è possibile modificare lo stato da CHIUSO\n");
+		return 1;
+	}
 
 	printf("\n");
 	printf("Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2\n");

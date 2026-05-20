@@ -34,7 +34,7 @@ static void scendi(PQueue q)
 			}
 			//Se le urgenze sono uguali, controlla il secondo criterio di priorità: data
 			//Vengono considerate più urgenti le richieste più vecchie
-			else if(get_urgenza(q->vet[2*i]) == get_urgenza(q->vet[2*i + 1]) && confronta_date(get_data(q->vet[2*1]), get_data(q->vet[2*i + 1])) == 1){
+			else if(get_urgenza(q->vet[2*i]) == get_urgenza(q->vet[2*i + 1]) && confronta_date(get_data(q->vet[2*1]), get_data(q->vet[2*i + 1])) == -1){
 				pos = 2*1;
 			}
 			else{
@@ -56,7 +56,7 @@ static void scendi(PQueue q)
 				i = pos;			//Continua a scendere nella coda
 		}
 		//Secondo criterio: data
-		else if(get_urgenza(q->vet[pos]) > get_urgenza(q->vet[i]) && confronta_date(get_data(q->vet[pos]), get_data(q->vet[i])) == 1){
+		else if(get_urgenza(q->vet[pos]) == get_urgenza(q->vet[i]) && confronta_date(get_data(q->vet[pos]), get_data(q->vet[i])) == -1){
 			temp = q->vet[i];
 			q->vet[i] = q->vet[pos];
 			q->vet[pos] = temp;
@@ -87,7 +87,7 @@ static void sali(PQueue q)
 		}
 		//Se le urgenze sono uguali, controlla il secondo criterio di priorità: data
 		//Vengono considerate più urgenti le richieste più vecchie
-		else if(get_urgenza(q->vet[pos]) > get_urgenza(q->vet[i]) && confronta_date(get_data(q->vet[pos]), get_data(q->vet[i])) == 1){
+		else if(get_urgenza(q->vet[pos]) == get_urgenza(q->vet[i]) && confronta_date(get_data(q->vet[pos]), get_data(q->vet[i])) == -1){
 			temp = q->vet[i];
 			q->vet[i] = q->vet[pos];
 			q->vet[pos] = temp;
@@ -103,7 +103,7 @@ static void sali(PQueue q)
 int vuota_PQ(PQueue q)
 {
 	if (!q)		return 1;          	//Controlla se il puntatore è NULL
-	return q->numelem == 0;    		//Ritorna 0 se la coda è vuota
+	return q->numelem == 0;    		//Ritorna 1 se la coda è vuota
 }
 
 //Funzione per eliminare l'elemento massimo dalla coda di priorità
@@ -148,10 +148,12 @@ void ingrandisci_PQ(PQueue q){}
 //Funzione per ottenere l'elemento a maggiore priorità
 item get_max_urgente(PQueue q)
 {
+	if(vuota_PQ(q) == 1)	return NULLITEM;
+
 	//Se lo stato dell'item è CHIUSO, questo viene eliminato dalla coda a priorità.
 	//Continua a farlo fino a quando lo stato dell'elemento in cima non è CHIUSO
 	while(get_stato(q->vet[1]) == CHIUSO){
-		if(vuota_PQ(q) == 0)	return NULLITEM;	//Ritorna NULLITEM se la coda è vuota
+		if(vuota_PQ(q) == 1)	return NULLITEM;	//Ritorna NULLITEM se la coda è vuota
 		deleteMax(q);
 	}
 

@@ -21,6 +21,7 @@ void ricerca_segnalazione(hashtable h);
 
 //Funzione che aggiorna lo stato di una segnalazione
 //Durante la sua esecuzione l'utente specifica l'id della segnalazione che vuole modificare
+//Non è possibile modificare lo stato da CHIUSO
 void aggiorna_stato_segnalazione(hashtable h);
 
 void visualizza_segnalazione_urgente(PQueue q);

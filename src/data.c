@@ -40,8 +40,8 @@ int confronta_date(data d1, data d2){
 
 	long dt1, dt2;
 
-	dt1 = (d1->anno)*10000000 + (d1->mese)*1000 + (d1->giorno);	//check 10^dadass idkkkkk
-	//idem ma dt2
+	dt1 = (d1->anno)*10000 + (d1->mese)*100 + (d1->giorno);
+	dt2 = (d2->anno)*10000 + (d2->mese)*100 + (d2->giorno);
 
 	if(dt1 > dt2)			return 1;
 	else if(dt1 == dt2)		return 0;
