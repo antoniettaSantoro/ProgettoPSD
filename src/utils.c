@@ -56,3 +56,37 @@ int valida_id(char* id){
 
 	return 1;
 }
+
+
+/****Stringhe****/
+
+//Scambia il carattere ' ' con '_' in una stringa
+char* scambio_spazio_trattino(char* stringa, char* nuova_stringa){	
+	int len = strlen(stringa);
+
+	int i;
+
+	for(i = 0; i < len; i++) {
+		if(stringa[i] == ' ')
+			nuova_stringa[i] = '_';
+		else
+			nuova_stringa[i] = stringa[i];
+	}
+
+	nuova_stringa[i + 1] = '\0';
+
+	return nuova_stringa;
+}
+
+//Scambia il carattere '_' con ' ' in una stringa
+void scambio_trattino_spazio(char* stringa){
+
+	int len = strlen(stringa);
+
+	for(int i = 0; i < len; i++) {
+		if(stringa[i] == '_')
+			stringa[i] = ' ';
+	}
+
+	return;
+}
