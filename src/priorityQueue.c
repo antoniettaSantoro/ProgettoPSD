@@ -141,7 +141,15 @@ void libera_PQ(PQueue q){
 	return;
 }
 
-void ingrandisci_PQ(PQueue q){}
+//Funzione che ingrandisce l'array della coda a priorità
+int ingrandisci_PQ(PQueue q){
+
+	q->vet = (item*) realloc(q->vet, (q->dimensione * 2) * sizeof(item));
+	if(q->vet == NULL)		return 0;
+
+	q->dimensione = q->dimensione * 2;
+	return 1;
+}
 
 /****Gestione coda a priorità****/
 
@@ -163,7 +171,14 @@ item get_max_urgente(PQueue q)
 // Funzione per inserire un nuovo elemento nella coda
 int inserisci_PQ(PQueue q, item segn)
 {
-	if (!q || q->numelem == q->dimensione)	return 0;	//Ritorna 0 se la coda è piena o NULL
+	if (!q || q->numelem == q->dimensione){
+		int val = ingrandisci_PQ(q);
+		if(val == 0){
+			printf("Errore realloc memoria\n");
+			printf("Fine programma\n");
+			exit(1);
+		}
+	}	//Se la coda è piena o NULL la ingrandisce
 
     q->numelem++;
     q->vet[q->numelem] = segn;					//Inserisce il nuovo elemento all'ultima posizione
