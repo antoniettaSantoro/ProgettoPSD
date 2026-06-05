@@ -33,9 +33,9 @@ void visualizza_segnalazione_urgente(PQueue q);
 //numero totale di segnalazioni,
 //segnalazioni per categoria,
 //segnalazioni aperte e chiuse,
-//numero di categoria con più segnalazioni.
+//categoria con più segnalazioni.
 //Il file generato è 'report.txt'
-void genera_report(hashtable h, char* fnome);
+void genera_report(hashtable h);
 
 //Funzione che legge da un file txt delle segnalazioni
 //Le segnalazioni già presenti nel programma vengono sovrascritte
@@ -58,5 +58,7 @@ void input_da_file(FILE* input, hashtable* h, PQueue* q);
 void stampa_categoria_file(hashtable h, categoria cat, int n, FILE* f);
 
 int aggiorna_stato(hashtable h, char* id, stato n_st);
+
+void stampa_report_su_file(hashtable h, char* fnome);
 
 #endif

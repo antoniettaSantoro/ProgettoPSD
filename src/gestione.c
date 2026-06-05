@@ -80,6 +80,22 @@ void stampa_intestazione_tabella_file(FILE* f){
 }
 
 
+/****Registra****/
+
+//Registra un segnalazione su hashmap e coda a priorità
+int registra_segnalazione(hashtable h, PQueue q, char* nome, categoria cat, char* descrizione, data d, int urgenza, stato st){
+
+	int num = get_numelem(h, cat) + 1;
+	char* id = genera_id((categoria) cat, num);
+
+	item s = crea_segnalazione(id, nome, cat, descrizione, d, urgenza, st);
+	int val = inserisci_Hash(h, s);
+	inserisci_PQ(q, s);
+
+	return val;
+}
+
+
 /****Ricerca****/
 
 //Ricerca una segnalazione tramite id dato in input
@@ -155,10 +171,6 @@ int aggiorna_stato(hashtable h, char* id, stato n_st){
 
 	stato st = get_stato(trovato);
 
-	if(st == APERTO)				printf("APERTO\n");
-	else if(st == INLAVORAZIONE)	printf("IN LAVORAZIONE\n");
-	else if(st == CHIUSO)			printf("CHIUSO\n");
-
 	if(st == CHIUSO){
 		return -1;
 	}
@@ -170,6 +182,7 @@ int aggiorna_stato(hashtable h, char* id, stato n_st){
 
 /****Generazione Report****/
 
+//Stampa su file tutte le segnalazioni della categoria data in input
 void stampa_categoria_file(hashtable h, categoria cat, int n, FILE* f){
 	
 	fprintf(f, "CATEGORIA %d: ", cat);
@@ -198,16 +211,70 @@ void stampa_categoria_file(hashtable h, categoria cat, int n, FILE* f){
 	fprintf(f, "================================================================================\n");
 }
 
-int registra_segnalazione(hashtable h, PQueue q, char* nome, categoria cat, char* descrizione, data d, int urgenza, stato st){
+//Stampa sul file il cui nome è dato in input un report contenente:
+//numero totale di segnalazioni,
+//segnalazioni per categoria,
+//segnalazioni aperte e chiuse,
+//categoria con più segnalazioni.
+void stampa_report_su_file(hashtable h, char* fnome){
 
-	int num = get_numelem(h, cat) + 1;
-	char* id = genera_id((categoria) cat, num);
+	FILE* f = fopen(fnome, "w");
+	if(f == NULL){
+		printf("Errore. Impossibile aprire il file\n");
+		return;
+	}
 
-	item s = crea_segnalazione(id, nome, cat, descrizione, d, urgenza, st);
-	int val = inserisci_Hash(h, s);
-	inserisci_PQ(q, s);
+	int num[5];
+	for(int i = 0; i < 5; i++){
+		num[i] = get_numelem(h, i);
+	}
 
-	return val;
+	fprintf(f, "================================================================================\n");
+	fprintf(f, "Numero totale segnalazioni: %d\n", num[4]);
+	fprintf(f, "================================================================================\n\n");
+	fprintf(f, "Segnalazioni per Categoria\n");
+	fprintf(f, "================================================================================\n");
+
+	for(int i = 0; i < 4; i++){
+		stampa_categoria_file(h, i, num[i], f);
+	}
+
+
+	fprintf(f, "Segnalazioni per Stato\n");
+	fprintf(f, "================================================================================\n\n");
+
+	for(int i = 0; i < 3; i++){
+		fprintf(f, "Segnalazioni ");
+
+		if(i == 0)				fprintf(f, "APERTO\n");
+		else if(i == 1)			fprintf(f, "IN LAVORAZIONE\n");
+		else if(i == 2)			fprintf(f, "CHIUSO\n");
+
+		stampa_intestazione_tabella_file(f);
+		stampa_Hashtable_stato_file(h, i, f);
+		fprintf(f, "================================================================================\n");
+	}
+
+	int max = 0;
+	for(int i = 1; i < 4; i++){
+		if(num[i] > num[max]){
+			max = i;
+		}
+	}
+	
+	fprintf(f, "\nLa categoria con più segnalazioni è: ");
+
+	if(max == 0)	fprintf(f, "ILLUMINAZIONE");
+	else if(max == 1)		fprintf(f, "GUASTI");
+	else if(max == 2)		fprintf(f, "RIFIUTI");
+	else if(max == 3)		fprintf(f, "STRADE");
+
+	fprintf(f, " con %d segnalazioni\n", num[max]);
+	fprintf(f, "================================================================================\n");
+
+	fclose(f);
+
+	return;
 }
 
 
@@ -571,12 +638,7 @@ void visualizza_segnalazione_urgente(PQueue q){
 	return;
 }
 
-void genera_report(hashtable h, char* fnome){
-
-	int num[5];
-	for(int i = 0; i < 5; i++){
-		num[i] = get_numelem(h, i);
-	}
+void genera_report(hashtable h){
 
 	system("clear");					//Pulisce lo schermo
 
@@ -585,66 +647,22 @@ void genera_report(hashtable h, char* fnome){
 	printf("==========================\n");
 	printf("Il report viene creato nel file \"report.txt\"\n\n");
 	
-	FILE* f = fopen(fnome, "w");
-	if(f == NULL){
-		printf("Errore. Impossibile aprire il file\n");
-		return;
-	}
-
-	fprintf(f, "================================================================================\n");
-	fprintf(f, "Numero totale segnalazioni: %d\n", num[4]);
-	fprintf(f, "================================================================================\n");
-	fprintf(f, "Segnalazioni per Categoria\n");
-	fprintf(f, "================================================================================\n");
-
-	for(int i = 0; i < 4; i++){
-		stampa_categoria_file(h, i, num[i], f);
-	}
-
-	fprintf(f, "================================================================================\n");
-	fprintf(f, "Segnalazioni per Stato\n");
-	fprintf(f, "================================================================================\n");
-
-	for(int i = 0; i < 3; i++){
-		fprintf(f, "Segnalazioni");
-
-		if(i == 0)				fprintf(f, "APERTO\n");
-		else if(i == 1)			fprintf(f, "IN LAVORAZIONE\n");
-		else if(i == 2)			fprintf(f, "CHIUSO\n");
-
-		stampa_intestazione_tabella_file(f);
-		stampa_Hashtable_stato_file(h, i, f);
-		fprintf(f, "================================================================================\n");
-	}
-
-	int max = 0;
-	for(int i = 1; i < 4; i++){
-		if(num[i] > num[max]){
-			max = i;
-		}
-	}
+	char fnome[] = "txt_files/report.txt";
 	
-	fprintf(f, "La categoria con più segnalazioni è: ");
-
-	if(max == 0)	fprintf(f, "ILLUMINAZIONE");
-	else if(max == 1)		fprintf(f, "GUASTI");
-	else if(max == 2)		fprintf(f, "RIFIUTI");
-	else if(max == 3)		fprintf(f, "STRADE");
-
-	fprintf(f, " con %d segnalazioni\n", num[max]);
-	fprintf(f, "================================================================================\n");
+	stampa_report_su_file(h, fnome);
 
 	printf("Report generato\n");
 	svuota_input_buffer();
 	printf("\nPremere INVIO per continuare...");
 	getchar();
 
-	fclose(f);
+	return;
 }
 
 void leggi_segnalazioni_file(hashtable h, PQueue q){
 
-	char nomefile[35];
+	char nomefile[45];
+	char nome[31];
 	char scelta;
 
 	system("clear");					//Pulisce lo schermo
@@ -656,6 +674,8 @@ void leggi_segnalazioni_file(hashtable h, PQueue q){
 	printf("Attenzione\n");
 	printf("Se viene eseguita questa operazione tutti i dati correnti verrano sovrascritti\n");
 	printf("Procedere? [y/n]");
+	
+	svuota_input_buffer();
 	scanf("%c", &scelta);
 	if(scelta == 'n'){
 		svuota_input_buffer();
@@ -677,8 +697,8 @@ void leggi_segnalazioni_file(hashtable h, PQueue q){
 	printf("Inserisci il nome del file [Lunghezza massima 30 caratteri. Non includere '.txt']: ");
 
 	svuota_input_buffer();
-	scanf("30%s", nomefile);
-	strcat(nomefile, ".txt");
+	scanf("%30s", nome);
+	sprintf(nomefile, "txt_files/%s.txt", nome);
 
 	FILE* input;
 	input = fopen(nomefile, "r");
@@ -705,7 +725,8 @@ void leggi_segnalazioni_file(hashtable h, PQueue q){
 
 void salva_segnalazioni_file(hashtable h){
 
-	char nomefile[35];
+	char nome[31];
+	char nomefile[45];
 
 	system("clear");					//Pulisce lo schermo
 
@@ -713,12 +734,12 @@ void salva_segnalazioni_file(hashtable h){
 	printf("\tSALVA SU FILE\n");
 	printf("==========================\n");
 
-	printf("Se il file inserito già esiste, questo verrà sovrascritto\n");
+	printf("Se il file inserito già esiste, questo verrà sovrascritto.\n");
 	printf("Inserisci il nome del file [Lunghezza massima 30 caratteri. Non includere '.txt']: ");
 
 	svuota_input_buffer();
-	scanf("30%s", nomefile);
-	strcat(nomefile, ".txt");
+	scanf("%30s", nome);
+	sprintf(nomefile, "txt_files/%s.txt", nome);
 
 	FILE* output;
 	output = fopen(nomefile, "w");
@@ -733,6 +754,8 @@ void salva_segnalazioni_file(hashtable h){
 	svuota_input_buffer();
 	printf("\nPremere INVIO per continuare...");
 	getchar();
+
+	fclose(output);
 
 	return;
 }
