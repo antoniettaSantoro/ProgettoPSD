@@ -3,6 +3,7 @@
 #include <string.h>
 #include "item.h"
 #include "data.h"
+#include "utils.h"
 
 /****Definizioni Strutture****/
 
@@ -77,7 +78,7 @@ stato get_stato(item s){
     return s->st;
 }
 
-/*Stato*/
+/****Stato****/
 
 void modifica_stato(item s, stato st){
     s->st = st;
@@ -92,7 +93,31 @@ void stampa_segnalazione(item s){
 }
 
 void stampa_segnalazione_file(item s, FILE* f){
-    fprintf(f, "%s\t%s\t%d\t", s->id, s->nome, s->cat);
-    stampa_data_file(s->dt, f);
-    fprintf(f, "\t%d\t%d\t%s\n",s->urgenza, s->st, s->descrizione);
+
+    char *nome_trattino, *descrizione_trattino;
+    nome_trattino = (char*) malloc(51 * sizeof(char));
+    descrizione_trattino = (char*) malloc(101 * sizeof(char));
+    if(nome_trattino == NULL || descrizione_trattino == NULL){
+        return;   
     }
+
+    nome_trattino = scambio_spazio_trattino(s->nome, nome_trattino);
+    descrizione_trattino = scambio_spazio_trattino(s->descrizione, descrizione_trattino);
+
+    fprintf(f, "%s\t%s\t%d\t", s->id, nome_trattino, s->cat);
+    stampa_data_file(s->dt, f);
+    fprintf(f, "\t%d\t%d\t%s\n",s->urgenza, s->st, descrizione_trattino);
+
+    free(nome_trattino);
+    free(descrizione_trattino);
+}
+
+/****Altro****/
+
+int confronta_segnalazioni(item s1, item s2){
+    if(strcmp(s1->id, s2->id) == 0 && s1->cat == s2->cat && s1->st == s2->st && s1->urgenza == s2->urgenza &&
+        confronta_date(s1->dt, s2->dt) == 0 && strcmp(s1->nome, s2->nome) == 0 && strcmp(s1->descrizione, s2->descrizione) == 0){
+            return 0;
+    }
+    else    return 1;
+}
