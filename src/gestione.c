@@ -27,6 +27,8 @@ void stampa_menu(){
     printf("5 - Visualizza Segnalazioni per Stato\n");
     printf("6 - Visualizza Segnalazione più Urgente\n");
     printf("7 - Genera Report\n");
+	printf("8 - Salva su File\n");
+	printf("9 - Carica da File\n");
     printf("=====================================\n");
     printf("\n\n");
 }
@@ -140,10 +142,11 @@ int visualizza_stato(hashtable h, stato st){
 
 //Aggiorna lo stato della segnalazione con id dato in input
 //Non è possibile modificare lo stato da CHIUSO
-//Restituisce 0 se la segnalazione non è stata trovata e 1 se l'operazione va a buon fine
-int aggiorna_stato(hashtable h, char* id){
+//Restituisce 0 se la segnalazione non è stata trovata,
+//-1 se lo stato attuale della segnalazione è CHIUSO,
+//1 se l'operazione va a buon fine
+int aggiorna_stato(hashtable h, char* id, stato n_st){
 
-	int n_st;
 	item trovato = ricerca(h, id);
 
 	if(trovato == NULLITEM){
@@ -151,59 +154,24 @@ int aggiorna_stato(hashtable h, char* id){
 	}
 
 	stato st = get_stato(trovato);
-	printf("\n");
-	printf("Stato attuale: ");
 
 	if(st == APERTO)				printf("APERTO\n");
 	else if(st == INLAVORAZIONE)	printf("IN LAVORAZIONE\n");
 	else if(st == CHIUSO)			printf("CHIUSO\n");
 
 	if(st == CHIUSO){
-		printf("Non è possibile modificare lo stato da CHIUSO\n");
-		return 1;
-	}
-
-	printf("\n");
-	printf("Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2\n");
-
-	while(1){
-		printf("Inserisci il nuovo stato: ");
-
-		svuota_input_buffer();
-		scanf("%d", &n_st);
-		if(n_st < 0 || n_st > 2){
-			printf("Valore inserito non valido\n");
-		}
-		else	break;			
+		return -1;
 	}
 
 	modifica_stato(trovato, n_st);
-
-	printf("Stato aggiornato\n");
 
 	return 1;
 }
 
 /****Generazione Report****/
 
-void stampa_categoria_file(hashtable h, categoria cat, int num, FILE* f){
-
-	char* id;
-
-	stampa_intestazione_tabella_file(f);
-
-	for(int i = 1; i <= num; i++){
-		id = genera_id(cat, i);
-		item trovato = ricerca(h, id);
-
-		stampa_segnalazione_file(trovato, f);
-	}
-
-	fprintf(f, "\n");
-}
-
-void stampa_segnalazioni_categoria_file(hashtable h, categoria cat, int n, FILE* f){
-		
+void stampa_categoria_file(hashtable h, categoria cat, int n, FILE* f){
+	
 	fprintf(f, "CATEGORIA %d: ", cat);
 	if(cat == ILLUMINAZIONE)	fprintf(f, "ILLUMINAZIONE\n");
 	else if(cat == GUASTI)		fprintf(f, "GUASTI\n");
@@ -213,20 +181,96 @@ void stampa_segnalazioni_categoria_file(hashtable h, categoria cat, int n, FILE*
 	fprintf(f, "================================================================================\n");
 	
 	if(n != 0){
-		stampa_categoria_file(h, cat, n, f);
+		char* id;
+	
+		stampa_intestazione_tabella_file(f);
+	
+		for(int i = 1; i <= n; i++){
+			id = genera_id(cat, i);
+			item trovato = ricerca(h, id);
+	
+			stampa_segnalazione_file(trovato, f);
+		}
+	
+		fprintf(f, "\n");
 	}	
-
+	
 	fprintf(f, "================================================================================\n");
 }
+
+int registra_segnalazione(hashtable h, PQueue q, char* nome, categoria cat, char* descrizione, data d, int urgenza, stato st){
+
+	int num = get_numelem(h, cat) + 1;
+	char* id = genera_id((categoria) cat, num);
+
+	item s = crea_segnalazione(id, nome, cat, descrizione, d, urgenza, st);
+	int val = inserisci_Hash(h, s);
+	inserisci_PQ(q, s);
+
+	return val;
+}
+
+
+/****File****/
+
+//Input segnalazioni da file
+void input_da_file(FILE* input, hashtable* h, PQueue* q){
+	char nome[51], descrizione[101], id[9];
+	int cat, g, m, a, urgenza, st;
+	int dim;
+
+	char segn[256];		//buffer per le segnalazioni
+
+	fscanf(input, "%d", &dim);
+
+	*h = crea_Hashtable(dim);
+	*q = crea_PQ(dim);
+	if(*h == NULL || *q == NULL){
+		printf("Errore\n");
+		exit(1);
+	}
+
+	while(fscanf(input,"%s%s%d%d/%d/%d%d%d%s", id, nome, &cat, &g, &m, &a, &urgenza, &st, descrizione) == 9){
+
+		//printf("%s\t%s\t%d\t%d/%d/%d\t%d\t%d\t%s\n", id, nome, cat, g, m, a, urgenza, st, descrizione);
+
+		data d = crea_data(g, m, a);
+		if(d == NULL){
+			printf("Errore data input\n");
+			exit(1);
+		}
+
+		scambio_trattino_spazio(nome);
+		scambio_trattino_spazio(descrizione);
+
+		item s = crea_segnalazione(id, nome, cat, descrizione, d, urgenza, st);
+		inserisci_Hash(*h, s);
+		inserisci_PQ(*q, s);
+	}
+
+	return;
+}
+
+//Output su file delle segnalazioni
+void output_file(FILE* out, hashtable h){
+
+	int dim = get_dimensione(h);
+
+	fprintf(out, "%d\n", dim);
+	stampa_Hashtable_file(h, out);
+
+	return;
+}
+
 
 /*******************************/
 /****FINE FUNZIONI AUSILIARI****/
 /*******************************/
 
 
-void registra_segnalazione(hashtable h, PQueue q){
+void registra_segnalazione_input(hashtable h, PQueue q){
 
-	system("cls || clear");					//Pulisce lo schermo
+	system("clear");					//Pulisce lo schermo
 
 	printf("\n");
     printf("=====================================\n");
@@ -239,8 +283,6 @@ void registra_segnalazione(hashtable h, PQueue q){
 	int g, m, a;
 	int cat;
 	int urgenza;
-	stato st = APERTO;					//Alla creazione ogni segnalazione è automaticamente aperta
-
 
 	svuota_input_buffer();
 
@@ -292,13 +334,10 @@ void registra_segnalazione(hashtable h, PQueue q){
 	printf("Descrizione: ");
 	scanf("%100[^\n]", descrizione);
 
-	int num = get_numelem(h, cat) + 1;
-	char* id = genera_id((categoria) cat, num);
+	stato st = APERTO;		//Alla creazione ogni segnalazione è automaticamente aperta
 
-	item s = crea_segnalazione(id, nome, (categoria) cat, descrizione, d, urgenza, st);
-	int val = inserisci_Hash(h, s);
-	inserisci_PQ(q, s);
-
+	int val = registra_segnalazione(h, q, nome, (categoria) cat, descrizione, d, urgenza, st);
+	
 	if(val == 0){
 		printf("La segnalazione inserita è già presente\n");
 	}
@@ -314,7 +353,7 @@ void registra_segnalazione(hashtable h, PQueue q){
 
 void visualizza_segnalazioni(hashtable h){
 
-	system("cls || clear");					//Pulisce lo schermo
+	system("clear");					//Pulisce lo schermo
 
 	printf("\n");
     printf("=====================================\n");
@@ -343,7 +382,7 @@ void ricerca_segnalazione(hashtable h){
 	svuota_input_buffer();
 
 	while(flag){
-		system("cls || clear");					//Pulisce lo schermo
+		system("clear");					//Pulisce lo schermo
 		stampa_menu_ricerca();
 		
 		printf("> ");
@@ -412,7 +451,7 @@ void visualizza_segnalazioni_stato(hashtable h){
 	svuota_input_buffer();
 
 	while(flag){
-		system("cls || clear");					//Pulisce lo schermo
+		system("clear");					//Pulisce lo schermo
 		stampa_menu_visualizza_stato();
 
 		printf("> ");
@@ -450,7 +489,7 @@ void visualizza_segnalazioni_stato(hashtable h){
 
 void aggiorna_stato_segnalazione(hashtable h){
 
-	system("cls || clear");					//Pulisce lo schermo
+	system("clear");					//Pulisce lo schermo
 
 	printf("\n");
     printf("=====================================\n");
@@ -469,9 +508,31 @@ void aggiorna_stato_segnalazione(hashtable h){
 		printf("Id non valido\n");
 	}
 	else{
-		val = aggiorna_stato(h, id);
+		int st;
+
+		printf("\n");
+		printf("Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2\n");
+
+		while(1){
+			printf("Inserisci il nuovo stato: ");
+
+			svuota_input_buffer();
+			scanf("%d", &st);
+			if(st < 0 || st > 2){
+				printf("Valore inserito non valido\n");
+			}
+			else	break;
+		}
+
+		val = aggiorna_stato(h, id, (stato) st);
 		if(val == 0){
 			printf("Segnalazione non trovata\n");
+		}
+		else if(val == -1){
+			printf("Non è possibile modificare lo stato da CHIUSO\n");
+		}
+		else{
+			printf("Stato aggiornato\n");
 		}
 	}
 
@@ -484,7 +545,7 @@ void aggiorna_stato_segnalazione(hashtable h){
 
 void visualizza_segnalazione_urgente(PQueue q){
 	
-	system("cls || clear");					//Pulisce lo schermo
+	system("clear");					//Pulisce lo schermo
 
 	printf("\n");
     printf("=====================================\n");
@@ -510,21 +571,21 @@ void visualizza_segnalazione_urgente(PQueue q){
 	return;
 }
 
-void genera_report(hashtable h){
+void genera_report(hashtable h, char* fnome){
 
 	int num[5];
 	for(int i = 0; i < 5; i++){
 		num[i] = get_numelem(h, i);
 	}
 
-	system("cls || clear");					//Pulisce lo schermo
+	system("clear");					//Pulisce lo schermo
 
 	printf("==========================\n");
 	printf("\tREPORT\n");
 	printf("==========================\n");
 	printf("Il report viene creato nel file \"report.txt\"\n\n");
 	
-	FILE* f = fopen("report.txt", "w");
+	FILE* f = fopen(fnome, "w");
 	if(f == NULL){
 		printf("Errore. Impossibile aprire il file\n");
 		return;
@@ -537,22 +598,24 @@ void genera_report(hashtable h){
 	fprintf(f, "================================================================================\n");
 
 	for(int i = 0; i < 4; i++){
-		stampa_segnalazioni_categoria_file(h, i, num[i], f);
+		stampa_categoria_file(h, i, num[i], f);
 	}
 
 	fprintf(f, "================================================================================\n");
 	fprintf(f, "Segnalazioni per Stato\n");
 	fprintf(f, "================================================================================\n");
 
-	fprintf(f, "Segnalazioni APERTE\n");
-	stampa_intestazione_tabella_file(f);
-	stampa_Hashtable_stato_file(h, 0, f);
-	fprintf(f, "================================================================================\n");
+	for(int i = 0; i < 3; i++){
+		fprintf(f, "Segnalazioni");
 
-	fprintf(f, "Segnalazioni CHIUSE\n");
-	stampa_intestazione_tabella_file(f);
-	stampa_Hashtable_stato_file(h, 2, f);
-	fprintf(f, "================================================================================\n");
+		if(i == 0)				fprintf(f, "APERTO\n");
+		else if(i == 1)			fprintf(f, "IN LAVORAZIONE\n");
+		else if(i == 2)			fprintf(f, "CHIUSO\n");
+
+		stampa_intestazione_tabella_file(f);
+		stampa_Hashtable_stato_file(h, i, f);
+		fprintf(f, "================================================================================\n");
+	}
 
 	int max = 0;
 	for(int i = 1; i < 4; i++){
@@ -577,4 +640,99 @@ void genera_report(hashtable h){
 	getchar();
 
 	fclose(f);
+}
+
+void leggi_segnalazioni_file(hashtable h, PQueue q){
+
+	char nomefile[35];
+	char scelta;
+
+	system("clear");					//Pulisce lo schermo
+
+	printf("==========================\n");
+	printf("\tLEGGI DA FILE\n");
+	printf("==========================\n");
+
+	printf("Attenzione\n");
+	printf("Se viene eseguita questa operazione tutti i dati correnti verrano sovrascritti\n");
+	printf("Procedere? [y/n]");
+	scanf("%c", &scelta);
+	if(scelta == 'n'){
+		svuota_input_buffer();
+		printf("\nPremere INVIO per continuare...");
+		getchar();
+		return;
+	}
+	else if(scelta != 'y'){
+		printf("Scelta non valida\n");
+		svuota_input_buffer();
+		printf("\nPremere INVIO per continuare...");
+		getchar();
+		return;
+	}
+
+	printf("Il file deve trovarsi nella cartella: \n");
+	printf("Il file deve essere stato generato dal programma o avere formato compatibile\n");
+	printf("In caso contrario non si assicura la corretta interpretazione dei dati\n");
+	printf("Inserisci il nome del file [Lunghezza massima 30 caratteri. Non includere '.txt']: ");
+
+	svuota_input_buffer();
+	scanf("30%s", nomefile);
+	strcat(nomefile, ".txt");
+
+	FILE* input;
+	input = fopen(nomefile, "r");
+	if(input == NULL){
+		printf("Errore nell'apertura file\n");
+		return;
+	}
+
+	libera_Hashtable(h);
+	libera_PQ(q);
+
+	hashtable nuova_h;
+	PQueue nuova_q;
+
+	input_da_file(input, &nuova_h, &nuova_q);
+
+	printf("Operazione completata\n");
+	svuota_input_buffer();
+	printf("\nPremere INVIO per continuare...");
+	getchar();
+
+	return;
+}
+
+void salva_segnalazioni_file(hashtable h){
+
+	char nomefile[35];
+
+	system("clear");					//Pulisce lo schermo
+
+	printf("==========================\n");
+	printf("\tSALVA SU FILE\n");
+	printf("==========================\n");
+
+	printf("Se il file inserito già esiste, questo verrà sovrascritto\n");
+	printf("Inserisci il nome del file [Lunghezza massima 30 caratteri. Non includere '.txt']: ");
+
+	svuota_input_buffer();
+	scanf("30%s", nomefile);
+	strcat(nomefile, ".txt");
+
+	FILE* output;
+	output = fopen(nomefile, "w");
+	if(output == NULL){
+		printf("Errore nell'apertura file\n");
+		return;
+	}
+
+	output_file(output, h);
+
+	printf("Operazione completata\n");
+	svuota_input_buffer();
+	printf("\nPremere INVIO per continuare...");
+	getchar();
+
+	return;
 }
