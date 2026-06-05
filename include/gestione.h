@@ -1,3 +1,6 @@
+#ifndef GESTIONE
+#define GESTIONE
+
 #include "hashmap.h"
 #include "priorityQueue.h"
 
@@ -6,7 +9,7 @@ void stampa_menu();
 
 //Funzione che aggiunge una segnalazione alla hashmap.
 //Durante la sua esecuzione chiede all'utente di inserire i parametri della segnalazione
-void registra_segnalazione(hashtable h, PQueue q);
+void registra_segnalazione_input(hashtable h, PQueue q);
 
 //Stampa a video tutte le segnalazioni presenti nella hashmap
 void visualizza_segnalazioni(hashtable h);
@@ -32,4 +35,28 @@ void visualizza_segnalazione_urgente(PQueue q);
 //segnalazioni aperte e chiuse,
 //numero di categoria con più segnalazioni.
 //Il file generato è 'report.txt'
-void genera_report(hashtable h);
+void genera_report(hashtable h, char* fnome);
+
+//Funzione che legge da un file txt delle segnalazioni
+//Le segnalazioni già presenti nel programma vengono sovrascritte
+void leggi_segnalazioni_file(hashtable h, PQueue q);
+
+//Funzione che salva le segnalazioni correnti in un file txt
+void salva_segnalazioni_file(hashtable h);
+
+/****TEST****/
+/*
+	Le seguenti funzioni sono funzioni ausiliari e in quanto tali non dovrebbero essere utilizzate al di fuori del file
+	gestione.c
+	Sono presenti nel file gestione.h perché utilizzate nel testing
+*/
+
+int registra_segnalazione(hashtable h, PQueue q, char* nome, categoria cat, char* descrizione, data d, int urgenza, stato st);
+
+void input_da_file(FILE* input, hashtable* h, PQueue* q);
+
+void stampa_categoria_file(hashtable h, categoria cat, int n, FILE* f);
+
+int aggiorna_stato(hashtable h, char* id, stato n_st);
+
+#endif
