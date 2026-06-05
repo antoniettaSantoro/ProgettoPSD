@@ -22,7 +22,7 @@ int main(){
 	}
 
 	while(flag){
-		system("cls || clear");					//Pulisce lo schermo		
+		system("clear");					//Pulisce lo schermo		
 		stampa_menu();
 
 		printf("> ");
@@ -36,7 +36,7 @@ int main(){
 			    flag = 0;
 			    break;
 		    case 1:
-			    registra_segnalazione(h, q);
+			    registra_segnalazione_input(h, q);
 				break;
 			case 2:
 				visualizza_segnalazioni(h);
@@ -55,6 +55,15 @@ int main(){
 				break;
 			case 7:
 				genera_report(h);
+				break;
+			case 8:
+				salva_segnalazioni_file(h);
+				break;
+			case 9:
+				leggi_segnalazioni_file(h, q);
+				break;
+			case 10:
+				configura(&h, &q);
 				break;
 		    default:
 				printf("Opzione insistente\n");				

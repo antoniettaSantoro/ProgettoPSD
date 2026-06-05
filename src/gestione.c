@@ -19,16 +19,17 @@ void stampa_menu(){
     printf("=====================================\n");
     printf("\t\tMENU\n");
     printf("=====================================\n");
-    printf("0 - Esci\n");
-    printf("1 - Registra Segnalazione\n");
-    printf("2 - Visualizza Tutte le Segnalazioni\n");
-    printf("3 - Ricerca Segnalazione\n");
-    printf("4 - Aggiorna Stato Segnalazione\n");
-    printf("5 - Visualizza Segnalazioni per Stato\n");
-    printf("6 - Visualizza Segnalazione più Urgente\n");
-    printf("7 - Genera Report\n");
-	printf("8 - Salva su File\n");
-	printf("9 - Carica da File\n");
+    printf("0  - Esci\n");
+    printf("1  - Registra Segnalazione\n");
+    printf("2  - Visualizza Tutte le Segnalazioni\n");
+    printf("3  - Ricerca Segnalazione\n");
+    printf("4  - Aggiorna Stato Segnalazione\n");
+    printf("5  - Visualizza Segnalazioni per Stato\n");
+    printf("6  - Visualizza Segnalazione più Urgente\n");
+    printf("7  - Genera Report\n");
+	printf("8  - Salva su File\n");
+	printf("9  - Carica da File\n");
+	printf("10 - Configura");
     printf("=====================================\n");
     printf("\n\n");
 }
@@ -65,7 +66,7 @@ void stampa_intestazione_tabella(){
 	printf("Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2\n");
 	printf("Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'\n");
 	printf("\n");
-	printf("ID\t\tNOME\tCAT\tDATA\t\tURGENZA\tSTATO\tDESCRIZIONE\n");
+	printf("ID\t\tNOME\t\tCAT\tDATA\t\tURGENZA\tSTATO\tDESCRIZIONE\n");
 	printf("\n");
 }
 
@@ -75,7 +76,7 @@ void stampa_intestazione_tabella_file(FILE* f){
 	fprintf(f, "Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2\n");
 	fprintf(f, "Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'\n");
 	fprintf(f, "\n");
-	fprintf(f, "ID\t\tNOME\tCAT\tDATA\t\tURGENZA\tSTATO\tDESCRIZIONE\n");
+	fprintf(f, "ID\t\t\tNOME\t\t\tCAT\tDATA\tURGENZA\tSTATO\tDESCRIZIONE\n");
 	fprintf(f, "\n");
 }
 
@@ -672,7 +673,7 @@ void leggi_segnalazioni_file(hashtable h, PQueue q){
 	printf("==========================\n");
 
 	printf("Attenzione\n");
-	printf("Se viene eseguita questa operazione tutti i dati correnti verrano sovrascritti\n");
+	printf("Se viene eseguita questa operazione tutti i dati correnti verrano sovrascritti.\n");
 	printf("Procedere? [y/n]");
 	
 	svuota_input_buffer();
@@ -691,7 +692,7 @@ void leggi_segnalazioni_file(hashtable h, PQueue q){
 		return;
 	}
 
-	printf("Il file deve trovarsi nella cartella: \n");
+	printf("Il file deve trovarsi nella cartella: 'txt_files'\n");
 	printf("Il file deve essere stato generato dal programma o avere formato compatibile\n");
 	printf("In caso contrario non si assicura la corretta interpretazione dei dati\n");
 	printf("Inserisci il nome del file [Lunghezza massima 30 caratteri. Non includere '.txt']: ");
@@ -710,10 +711,7 @@ void leggi_segnalazioni_file(hashtable h, PQueue q){
 	libera_Hashtable(h);
 	libera_PQ(q);
 
-	hashtable nuova_h;
-	PQueue nuova_q;
-
-	input_da_file(input, &nuova_h, &nuova_q);
+	input_da_file(input, &h, &q);
 
 	printf("Operazione completata\n");
 	svuota_input_buffer();
@@ -756,6 +754,57 @@ void salva_segnalazioni_file(hashtable h){
 	getchar();
 
 	fclose(output);
+
+	return;
+}
+
+void configura(hashtable* h, PQueue* q){
+
+	int dim;
+	char scelta;
+	
+	system("clear");					//Pulisce lo schermo
+
+	printf("==========================\n");
+	printf("\tCONFIGURAZIONE\n");
+	printf("==========================\n");
+
+	printf("Attenzione\n");
+	printf("Se viene eseguita questa operazione tutti i dati correnti verrano eliminati.\n");
+	printf("Procedere? [y/n]");
+	
+	svuota_input_buffer();
+	scanf("%c", &scelta);
+	if(scelta == 'n'){
+		svuota_input_buffer();
+		printf("\nPremere INVIO per continuare...");
+		getchar();
+		return;
+	}
+	else if(scelta != 'y'){
+		printf("Scelta non valida\n");
+		svuota_input_buffer();
+		printf("\nPremere INVIO per continuare...");
+		getchar();
+		return;
+	}
+
+	printf("\nScegliere la dimensione in base alla popolazione del comune e al numero di segnalazioni previste.\n");
+	printf("ES: popolazione: 5000 abitanti; segnalazioni previste: 1500; dimensione appropriata: 3000\n\n");
+	printf("Inserisci dimensione: ");
+	svuota_input_buffer();
+	scanf("%d", &dim);
+
+	libera_Hashtable(*h);
+	libera_PQ(*q);
+
+	*h = crea_Hashtable(dim);
+	*q = crea_PQ(dim);
+
+	printf("Operazione completata\n");
+	svuota_input_buffer();
+	printf("\nPremere INVIO per continuare...");
+	getchar();
 
 	return;
 }
