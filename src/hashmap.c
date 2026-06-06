@@ -65,7 +65,7 @@ hashtable crea_Hashtable(int dimensione) {
     }
 
 	//Inizializzo i valori di numelem a 0 perché alla creazione la hashmap non contiene nessun item
-	for(int i; i < 5; i++){
+	for(int i = 0; i < 5; i++){
 		h->numelem[i] = 0;
 	}
 
@@ -145,6 +145,10 @@ item ricerca(hashtable h, char* chiave){
 
 int get_numelem(hashtable h, int n){
 	return h->numelem[n];
+}
+
+int get_dimensione(hashtable h){
+    return h->dimensione;
 }
 
 

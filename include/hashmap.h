@@ -1,3 +1,6 @@
+#ifndef HASH
+#define HASH
+
 #include "item.h"
 
 typedef struct hash *hashtable;
@@ -31,6 +34,9 @@ item ricerca(hashtable h, char* chiave);
 //4 = numero totale di elementi presenti nella hashmap
 int get_numelem(hashtable h, int n);
 
+//Restituisce la dimensione della hashmap
+int get_dimensione(hashtable h);
+
 /****Stampa****/
 
 //Stampa a video l'intera hashmap
@@ -52,3 +58,5 @@ int stampa_Hashtable_stato(hashtable h, stato st);
 //Se la hashmap in input non è corretta restituisce 0
 //Se la stampa va a buon fine restituisce 1
 int stampa_Hashtable_stato_file(hashtable h, stato st, FILE* f);
+
+#endif
