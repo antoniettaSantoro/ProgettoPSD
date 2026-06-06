@@ -48,6 +48,8 @@ int confronta_date(data d1, data d2){
 	else					return -1;
 }
 
+//Controllo che la data sia valida, cioè che esista.
+//ES: 30/07/2020 non è una data valida
 int valida_data(int g, int m, int a){
 	if(a < 2000 || m < 1 || m > 12 || g < 1)	return 0;
 

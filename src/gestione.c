@@ -117,7 +117,7 @@ int ricerca_id(hashtable h, char* id){
 	return 1;
 }
 
-//Ricerca per categoia e stampa tutti i risultati corrispondenti
+//Ricerca per categoria e stampa tutti i risultati corrispondenti
 int ricerca_categoria(hashtable h, categoria cat){
 
 	char* id;
@@ -287,8 +287,6 @@ void input_da_file(FILE* input, hashtable* h, PQueue* q){
 	int cat, g, m, a, urgenza, st;
 	int dim;
 
-	char segn[256];		//buffer per le segnalazioni
-
 	fscanf(input, "%d", &dim);
 
 	*h = crea_Hashtable(dim);
@@ -299,8 +297,6 @@ void input_da_file(FILE* input, hashtable* h, PQueue* q){
 	}
 
 	while(fscanf(input,"%s%s%d%d/%d/%d%d%d%s", id, nome, &cat, &g, &m, &a, &urgenza, &st, descrizione) == 9){
-
-		//printf("%s\t%s\t%d\t%d/%d/%d\t%d\t%d\t%s\n", id, nome, cat, g, m, a, urgenza, st, descrizione);
 
 		data d = crea_data(g, m, a);
 		if(d == NULL){
@@ -451,7 +447,7 @@ void ricerca_segnalazione(hashtable h){
 
 	while(flag){
 		system("clear");					//Pulisce lo schermo
-		stampa_menu_ricerca();
+		stampa_menu_ricerca();				// 0 = indietro, 1 = id, 2 = categoria
 		
 		printf("> ");
 		scanf("%d", &scelta);
@@ -794,6 +790,16 @@ void configura(hashtable* h, PQueue* q){
 	printf("Inserisci dimensione: ");
 	svuota_input_buffer();
 	scanf("%d", &dim);
+
+	if(dim < 1){
+		printf("Errore. Dimensione non consentita.\n");
+			
+		svuota_input_buffer();
+		printf("\nPremere INVIO per continuare...");
+		getchar();
+
+		return;					//ritorna se la dimensione non è valida
+	}
 
 	libera_Hashtable(*h);
 	libera_PQ(*q);

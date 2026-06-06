@@ -1,3 +1,6 @@
+#ifndef PriorityQ
+#define PriorityQ
+
 #include "item.h"
 
 typedef struct PQ *PQueue;
@@ -20,3 +23,5 @@ item get_max_urgente(PQueue q);
 //Restituisce 0 se la coda è piena o il puntatore ad essa è NULL
 //Restituisce 1 se l'operazione va a buon fine
 int inserisci_PQ(PQueue q, item segn);
+
+#endif

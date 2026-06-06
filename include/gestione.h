@@ -27,6 +27,10 @@ void ricerca_segnalazione(hashtable h);
 //Non è possibile modificare lo stato da CHIUSO
 void aggiorna_stato_segnalazione(hashtable h);
 
+//Funzione che stampa a video la segnalazione più urgente inserita.
+//Vengono considerate solo le segnalazioni APERTE o INLAVORAZIONE
+//Le segnalazioni CHIUSE vengono ignorate
+//I criteri di urgenza sono il parametro 'urgenza' e il parametro 'data'
 void visualizza_segnalazione_urgente(PQueue q);
 
 //Funzione che genera e stampa su file un report con:
@@ -43,6 +47,11 @@ void leggi_segnalazioni_file(hashtable h, PQueue q);
 
 //Funzione che salva le segnalazioni correnti in un file txt
 void salva_segnalazioni_file(hashtable h);
+
+//Funzione per configuarare la dimensione delle strutture.
+//La dimensione dovrebbe basarsi sulla popolazione del comune e al numero di segnalazioni previste.
+//ES: popolazione: 5000 abitanti; segnalazioni previste: 1500; dimensione appropriata: 3000
+void configura(hashtable* h, PQueue* q);
 
 /****TEST****/
 /*

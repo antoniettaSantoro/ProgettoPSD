@@ -92,6 +92,7 @@ void stampa_segnalazione(item s){
     printf("\t%d\t%d\t%s\n",s->urgenza, s->st, s->descrizione);
 }
 
+//Nella stampa su file le stringhe vengono modificate in modo da non contenere il carattere ' '
 void stampa_segnalazione_file(item s, FILE* f){
 
     char *nome_trattino, *descrizione_trattino;
