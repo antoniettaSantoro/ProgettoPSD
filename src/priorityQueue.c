@@ -144,7 +144,9 @@ void libera_PQ(PQueue q){
 //Funzione che ingrandisce l'array della coda a priorità
 int ingrandisci_PQ(PQueue q){
 
-	q->vet = (item*) realloc(q->vet, (q->dimensione * 2) * sizeof(item));
+	int dim = (q->dimensione * 2);
+
+	q->vet = (item*) realloc(q->vet, dim * sizeof(item));
 	if(q->vet == NULL)		return 0;
 
 	q->dimensione = q->dimensione * 2;
