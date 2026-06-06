@@ -1,0 +1,55 @@
+================================================================================
+Numero totale segnalazioni: 0
+================================================================================
+
+Segnalazioni per Categoria
+================================================================================
+CATEGORIA 0: ILLUMINAZIONE
+Numero segnalazioni: 0
+================================================================================
+================================================================================
+CATEGORIA 1: GUASTI
+Numero segnalazioni: 0
+================================================================================
+================================================================================
+CATEGORIA 2: RIFIUTI
+Numero segnalazioni: 0
+================================================================================
+================================================================================
+CATEGORIA 3: STRADE
+Numero segnalazioni: 0
+================================================================================
+================================================================================
+Segnalazioni per Stato
+================================================================================
+
+Segnalazioni APERTO
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+================================================================================
+Segnalazioni IN LAVORAZIONE
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+================================================================================
+Segnalazioni CHIUSO
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+================================================================================
+
+La categoria con più segnalazioni è: ILLUMINAZIONE con 0 segnalazioni
+================================================================================

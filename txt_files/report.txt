@@ -1,0 +1,99 @@
+================================================================================
+Numero totale segnalazioni: 6
+================================================================================
+
+Segnalazioni per Categoria
+================================================================================
+CATEGORIA 0: ILLUMINAZIONE
+Numero segnalazioni: 2
+================================================================================
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+ILL00001	Luca_Sibillo	0	12/12/2012	7	1	Lampione_guasto
+ILL00002	Ugo_Mingione	0	03/03/2003	3	0	Lampione_guasto
+
+================================================================================
+CATEGORIA 1: GUASTI
+Numero segnalazioni: 1
+================================================================================
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+GUA00001	Ignazzo_Rizzo	1	03/03/2010	1	0	Guasto_fogna
+
+================================================================================
+CATEGORIA 2: RIFIUTI
+Numero segnalazioni: 2
+================================================================================
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+RIF00001	Elena_Viscardi	2	10/10/2003	4	2	Rifiuti_nel_parco
+RIF00002	Alessandro_Ro	2	30/09/2023	3	0	helloC
+
+================================================================================
+CATEGORIA 3: STRADE
+Numero segnalazioni: 1
+================================================================================
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+STR00001	Giada_Carbone	3	11/11/2011	5	0	Buca_via_XXIVMaggio
+
+================================================================================
+Segnalazioni per Stato
+================================================================================
+
+Segnalazioni APERTO
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+GUA00001	Ignazzo_Rizzo	1	03/03/2010	1	0	Guasto_fogna
+ILL00002	Ugo_Mingione	0	03/03/2003	3	0	Lampione_guasto
+RIF00002	Alessandro_Ro	2	30/09/2023	3	0	helloC
+STR00001	Giada_Carbone	3	11/11/2011	5	0	Buca_via_XXIVMaggio
+================================================================================
+Segnalazioni IN LAVORAZIONE
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+ILL00001	Luca_Sibillo	0	12/12/2012	7	1	Lampione_guasto
+================================================================================
+Segnalazioni CHIUSO
+
+Indici di Categoria: ILLUMINAZIONE = 0, GUASTI = 1, RIFIUTI = 2, STRADE = 3
+Indici di Stato: APERTO = 0, CHIUSO = 1, INLAVORAZIONE = 2
+Indici di urgenza: Numero da 1 a 10. 1 indica 'poco urgente', 10 indica 'molto urgente'
+
+ID			NOME			CAT	DATA	URGENZA	STATO	DESCRIZIONE
+
+RIF00001	Elena_Viscardi	2	10/10/2003	4	2	Rifiuti_nel_parcoi
+================================================================================
+
+La categoria con più segnalazioni è: ILLUMINAZIONE con 2 segnalazioni
+================================================================================

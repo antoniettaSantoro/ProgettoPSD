@@ -29,7 +29,7 @@ void stampa_menu(){
     printf("7  - Genera Report\n");
 	printf("8  - Salva su File\n");
 	printf("9  - Carica da File\n");
-	printf("10 - Configura");
+	printf("10 - Configura\n");
     printf("=====================================\n");
     printf("\n\n");
 }

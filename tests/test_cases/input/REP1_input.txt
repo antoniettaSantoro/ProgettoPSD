@@ -1,0 +1,6 @@
+50
+ILL00001	Luca_Sibillo	0	12/12/2012	7	1	Lampione_guasto
+STR00001	Giada_Carbone	3	11/11/2011	5	0	Buca_via_XXIVMaggio
+ILL00002	Ugo_Mingione	0	03/03/2003	3	0	Lampione_guasto
+RIF00001	Elena_Viscardi	2	10/10/2003	4	2	Rifiuti_nel_parco
+GUA00001	Ignazzo_Rizzo	1	03/03/2010	1	0	Guasto_fogna

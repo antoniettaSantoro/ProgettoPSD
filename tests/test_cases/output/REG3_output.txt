@@ -1,0 +1,2 @@
+ILL00001	Luca_Sibillo	0	12/12/2012	7	0	Lampione_guasto
+ILL00002	Luca_Sibillo	0	12/12/2012	7	0	Lampione_guasto
