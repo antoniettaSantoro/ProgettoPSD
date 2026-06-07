@@ -63,13 +63,13 @@ int main(){
         exit(1);
     }
 
-	run_test_suite_REG(result, 3);		//3  casi di test per la registrazione
-	run_test_suite_RID(result, 3);
-	run_test_suite_RCT(result, 2);
-	run_test_suite_AGG(result, 4);
-	run_test_suite_PRT(result, 5);
-	run_test_suite_VST(result, 4);
-	run_test_suite_REP(result, 2);
+	run_test_suite_REG(result, 3);		//3 casi di test per la registrazione
+	run_test_suite_RID(result, 3);		//3 casi di test per la ricerca per id 
+	run_test_suite_RCT(result, 2);		//2 casi di test per la ricerca per categoria
+	run_test_suite_AGG(result, 4);		//4 casi di test per l'aggiornamento dello stato
+	run_test_suite_PRT(result, 5);		//5 casi di test per la gestione della priorità
+	run_test_suite_VST(result, 4);		//4 casi di test per la visualizzazione per stato
+	run_test_suite_REP(result, 2);		//2 casi di test per la generazione del report
 
 	printf("Test conclusi.\nI risultati sono memorizzati nel file 'TEST_results.txt\n");
 
@@ -153,14 +153,12 @@ void run_test_suite_REG(FILE* res, int num){
 //Test suite per la Ricerca per ID
 void run_test_suite_RID(FILE* res, int num){
 
-	char nome[51], descrizione[101], id[9];
-	int cat, g, m, a, urgenza, st;
 	item trovato;
 	char id_da_trovare[9];
 	
 	int pass;
 
-	FILE *in, *out, *or;
+	FILE *in, *out;
 	char input_fnome[M], output_fnome[M], oracolo_fnome[M];	
 	char tc_id[] = "RID";
 
@@ -186,39 +184,18 @@ void run_test_suite_RID(FILE* res, int num){
 		input_da_file(in, &h, &q);
 
 		trovato = ricerca(h, id_da_trovare);
+
 		if(trovato == NULLITEM){
 			fprintf(out, "Segnalazione non trovata\n");
-			
-			fclose(out);
-
-			pass = confronto_output_oracolo(output_fnome, oracolo_fnome);
 		}
 		else{
 			stampa_segnalazione_file(trovato, out);
-			
-			//Controlla che la segnalazione contenuta nell'oracolo sia quella trovata dalla funzione ricerca
-			or = fopen(oracolo_fnome, "r");
-			fscanf(or, "%s\t%s\t%d\t%d/%d/%d\t%d\t%d\t%s", id, nome, &cat, &g, &m, &a, &urgenza, &st, descrizione);
-			scambio_trattino_spazio(nome);
-			scambio_trattino_spazio(descrizione);
-			
-			data d = crea_data(g, m, a);
-			if(d == NULL){
-				printf("Errore creazione data\n");
-				exit(1);
-			}
-			item oracolo = crea_segnalazione(id, nome, (categoria) cat, descrizione, d, urgenza, (stato) st);
-			if(oracolo == NULL){
-				printf("Errore creazione segnalazione\n");
-				exit(1);
-			}
-			
-			pass = confronta_segnalazioni(oracolo, trovato);
-			libera_segnalazione(oracolo);
-			
-			fclose(or);
-			fclose(out);
 		}
+
+		fclose(out);
+		fclose(in);
+		
+		pass = confronto_output_oracolo(output_fnome, oracolo_fnome);
 
 		//Stampa risultati
 		fprintf(res, "%s%d\t", tc_id, i);
@@ -228,7 +205,7 @@ void run_test_suite_RID(FILE* res, int num){
 		libera_Hashtable(h);
 		libera_PQ(q);
 
-		fclose(in);
+		//fclose(in);
 	}
 
 	return;
@@ -286,6 +263,7 @@ void run_test_suite_RCT(FILE* res, int num){
 	return;
 }
 
+//Test suite per l'aggiornamento dello stato
 void run_test_suite_AGG(FILE* res, int num){
 
 	item trovato;
@@ -348,15 +326,14 @@ void run_test_suite_AGG(FILE* res, int num){
 	return;
 }
 
+//Test suite per la gestione della priorità
 void run_test_suite_PRT(FILE* res, int num){
 
-	char nome[51], descrizione[101], id[9];
-	int cat, g, m, a, urgenza, st;
 	item urgente;
 	
 	int pass;
 
-	FILE *in, *out, *or;
+	FILE *in, *out;
 	char input_fnome[M], output_fnome[M], oracolo_fnome[M];	
 	char tc_id[] = "PRT";
 
@@ -384,36 +361,17 @@ void run_test_suite_PRT(FILE* res, int num){
 		if(urgente == NULLITEM){
 			fprintf(out, "Coda a priorità vuota\n");
 		
-			fclose(out);
+			//fclose(out);
 			pass = confronto_output_oracolo(output_fnome, oracolo_fnome);
 		}
 		else{
 			stampa_segnalazione_file(urgente, out);
-			
-			//Controlla che la segnalazione contenuta nell'oracolo sia quella trovata dalla funzione ricerca
-			or = fopen(oracolo_fnome, "r");
-			fscanf(or, "%s\t%s\t%d\t%d/%d/%d\t%d\t%d\t%s", id, nome, &cat, &g, &m, &a, &urgenza, &st, descrizione);
-			scambio_trattino_spazio(nome);
-			scambio_trattino_spazio(descrizione);
-
-			data d = crea_data(g, m, a);
-			if(d == NULL){
-				printf("Errore creazione data\n");
-				exit(1);
-			}
-			item oracolo = crea_segnalazione(id, nome, (categoria) cat, descrizione, d, urgenza, (stato) st);
-			if(oracolo == NULL){
-				printf("Errore creazione segnalazione\n");
-				exit(1);
-			}
-			
-			pass = confronta_segnalazioni(oracolo, urgente);
-	
-			libera_segnalazione(oracolo);
-
-			fclose(or);
-			fclose(out);
 		}
+
+		fclose(out);
+		fclose(in);
+		
+		pass = confronto_output_oracolo(output_fnome, oracolo_fnome);
 
 		//Stampa risultati
 		fprintf(res, "%s%d\t", tc_id, i);
@@ -422,13 +380,12 @@ void run_test_suite_PRT(FILE* res, int num){
 
 		libera_Hashtable(h);
 		libera_PQ(q);
-
-		fclose(in);
 	}
 
 	return;
 }
 
+//Test suite per la visualizzazione per stato
 void run_test_suite_VST(FILE* res, int num){
 
 	int stato_da_filtrare;
@@ -479,6 +436,7 @@ void run_test_suite_VST(FILE* res, int num){
 	return;
 }
 
+//Test suite per la generazione del report
 void run_test_suite_REP(FILE* res, int num){
 
 	int pass;

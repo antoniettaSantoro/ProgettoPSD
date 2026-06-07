@@ -58,11 +58,4 @@ void stampa_segnalazione(item s);
 //Stampa su file una segnalazione
 void stampa_segnalazione_file(item s, FILE* f);
 
-/****Altro****/
-
-//Confronta due segnalazioni
-//Restituisce 0 se s1 = s2
-//Restituisce 1 altrimenti
-int confronta_segnalazioni(item s1, item s2);
-
 #endif

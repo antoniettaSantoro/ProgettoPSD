@@ -112,13 +112,3 @@ void stampa_segnalazione_file(item s, FILE* f){
     free(nome_trattino);
     free(descrizione_trattino);
 }
-
-/****Altro****/
-
-int confronta_segnalazioni(item s1, item s2){
-    if(strcmp(s1->id, s2->id) == 0 && s1->cat == s2->cat && s1->st == s2->st && s1->urgenza == s2->urgenza &&
-        confronta_date(s1->dt, s2->dt) == 0 && strcmp(s1->nome, s2->nome) == 0 && strcmp(s1->descrizione, s2->descrizione) == 0){
-            return 0;
-    }
-    else    return 1;
-}
