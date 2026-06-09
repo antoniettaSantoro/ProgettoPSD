@@ -14,7 +14,7 @@ Posizionarsi nella radice.
 
 ### Compilazione  
 Makefile realizzato in Linux.  
-Digitare `make` nella radice per compilare sia 'segnalazioni', che 'run_tests'
+Digitare `make` nella radice per compilare sia 'segnalazioni' che 'run_tests'
 
 ---
 
