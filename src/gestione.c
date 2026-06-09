@@ -688,7 +688,7 @@ void leggi_segnalazioni_file(hashtable h, PQueue q){
 		return;
 	}
 
-	printf("Il file deve trovarsi nella cartella: 'txt_files'\n");
+	printf("Il file deve trovarsi nella cartella: '/txt_files'\n");
 	printf("Il file deve essere stato generato dal programma o avere formato compatibile\n");
 	printf("In caso contrario non si assicura la corretta interpretazione dei dati\n");
 	printf("Inserisci il nome del file [Lunghezza massima 30 caratteri. Non includere '.txt']: ");
@@ -727,7 +727,7 @@ void salva_segnalazioni_file(hashtable h){
 	printf("==========================\n");
 	printf("\tSALVA SU FILE\n");
 	printf("==========================\n");
-
+	
 	printf("Se il file inserito già esiste, questo verrà sovrascritto.\n");
 	printf("Inserisci il nome del file [Lunghezza massima 30 caratteri. Non includere '.txt']: ");
 
@@ -744,6 +744,7 @@ void salva_segnalazioni_file(hashtable h){
 
 	output_file(output, h);
 
+	printf("Il file si trova nella cartella: '/txt_files'\n");
 	printf("Operazione completata\n");
 	svuota_input_buffer();
 	printf("\nPremere INVIO per continuare...");
